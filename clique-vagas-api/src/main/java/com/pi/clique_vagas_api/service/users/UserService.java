@@ -1,12 +1,13 @@
-package com.pi.clique_vagas_api.service;
+package com.pi.clique_vagas_api.service.users;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pi.clique_vagas_api.Model.UserModel;
-import com.pi.clique_vagas_api.dto.user.UserDto;
+import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
+import com.pi.clique_vagas_api.model.dto.user.UserDto;
+import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.UserRepository;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
@@ -21,6 +22,7 @@ public class UserService {
                 null,
                 userDto.firstName(),
                 userDto.lastName(),
+                userDto.role(),
                 userDto.cpf(),
                 userDto.phone(),
                 userDto.email(),
@@ -32,7 +34,8 @@ public class UserService {
     }
 
     public UserModel getUserById(Long userId) {
-        return userRepository.findById(userId).orElse(null);
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EventNotFoundException("User not found with ID: " + userId));
     }
 
     public List<UserModel> getAllUsers() {

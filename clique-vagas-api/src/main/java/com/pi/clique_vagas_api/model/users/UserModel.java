@@ -1,10 +1,15 @@
-package com.pi.clique_vagas_api.Model;
+package com.pi.clique_vagas_api.model.users;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +30,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "users")
 @DynamicUpdate
-public class UserModel {
+public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -37,6 +42,10 @@ public class UserModel {
     @Column(name = "last_name", length = 100)
     @NotNull
     private String lastName;
+
+    @Column(name = "role", length = 50)
+    @NotNull
+    private UserRole role;
 
     @Column(name = "cpf", length = 14, unique = true)
     @NotNull
@@ -59,4 +68,24 @@ public class UserModel {
 
     @UpdateTimestamp
     private ZonedDateTime updatedAt;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == UserRole.ADMIN)
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == UserRole.COMPANY)
+            return List.of(new SimpleGrantedAuthority("ROLE_COMPANY"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == UserRole.INTERN)
+            return List.of(new SimpleGrantedAuthority("ROLE_INTERN"), new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        // throw new UnsupportedOperationException("Unimplemented method
+        // 'getAuthorities'");
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+        // throw new UnsupportedOperationException("Unimplemented method
+        // 'getUsername'");
+    }
 }

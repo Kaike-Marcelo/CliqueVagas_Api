@@ -9,5 +9,4 @@ public class CliqueVagasApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CliqueVagasApiApplication.class, args);
 	}
-
 }

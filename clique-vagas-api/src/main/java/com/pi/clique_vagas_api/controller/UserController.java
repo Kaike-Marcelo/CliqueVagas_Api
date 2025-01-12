@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pi.clique_vagas_api.Model.UserModel;
-import com.pi.clique_vagas_api.dto.user.UserDto;
-import com.pi.clique_vagas_api.service.UserService;
+import com.pi.clique_vagas_api.model.dto.user.UserDto;
+import com.pi.clique_vagas_api.model.users.UserModel;
+import com.pi.clique_vagas_api.service.users.UserService;
 
 @RestController
 @RequestMapping("/user")
