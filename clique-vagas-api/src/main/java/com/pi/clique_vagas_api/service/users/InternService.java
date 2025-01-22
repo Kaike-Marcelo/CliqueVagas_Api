@@ -80,9 +80,13 @@ public class InternService {
     @Transactional
     public GetInternDto getDataByIdUser(Long id) {
         var user = userService.getUserById(id);
+
+        if (user.getRole() != UserRole.INTERN)
+            throw new EventNotFoundException("User is not an intern");
+
         var intern = internRepository.findByUserId(user);
-        var address = addressService.getByUserId(user);
-        var skills = skillInternService.getSkillsFromInternByUserId(intern);
+        var address = addressService.getAddressDtoByUserId(user);
+        var skills = skillInternService.getSkillsDtoByInternId(intern);
 
         GetInternDto getInternDto = new GetInternDto();
         getInternDto.setAddress(address);

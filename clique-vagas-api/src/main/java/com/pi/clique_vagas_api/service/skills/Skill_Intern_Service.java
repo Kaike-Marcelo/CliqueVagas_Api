@@ -9,6 +9,7 @@ import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.repository.skills.Skill_Intern_Repository;
+import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_WithIdDto;
 import com.pi.clique_vagas_api.resources.dto.skill.Intern.Skill_Intern_Dto;
 import com.pi.clique_vagas_api.service.users.InternService;
 
@@ -57,6 +58,17 @@ public class Skill_Intern_Service {
     public List<Skill_Intern_Model> getSkillsFromInternByUserId(InternModel intern) {
         var skillIntern = skillInternRepository.findAllByIdIntern(intern);
         return skillIntern;
+    }
+
+    public List<Skill_Intermediate_WithIdDto> getSkillsDtoByInternId(InternModel intern) {
+        var skillIntern = skillInternRepository.findAllByIdIntern(intern);
+
+        return skillIntern.stream()
+                .map(skill -> new Skill_Intermediate_WithIdDto(
+                        skill.getId(),
+                        skill.getIdSkill(),
+                        skill.getProficiencyLevel()))
+                .toList();
     }
 
     public void deleteSkillIntern(Long id) {
