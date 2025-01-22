@@ -93,7 +93,13 @@
 			<version>4.4.0</version>
 		</dependency>
 		
-	</dependencies>
+	
+   <dependency>
+     <groupId>org.hibernate</groupId>
+     <artifactId>hibernate-core</artifactId>
+     <version>5.4.4.Final</version>
+   </dependency>
+ </dependencies>
 
 	<build>
 		<plugins>
@@ -124,4 +130,21 @@
 		</plugins>
 	</build>
 
+
+
+	<dependencyManagement>
+	
+
+		<dependencies>
+		
+
+			<dependency>
+				<groupId>org.hibernate.common</groupId>
+				<artifactId>hibernate-commons-annotations</artifactId>
+				<version>7.0.3.Final</version>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
 </project>

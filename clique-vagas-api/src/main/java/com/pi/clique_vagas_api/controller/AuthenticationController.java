@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pi.clique_vagas_api.infra.security.TokenBlacklistService;
 import com.pi.clique_vagas_api.infra.security.TokenService;
-import com.pi.clique_vagas_api.model.dto.user.AuthenticationDto;
-import com.pi.clique_vagas_api.model.dto.user.LoginResponseDto;
-import com.pi.clique_vagas_api.model.dto.user.UserDto;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.UserRepository;
+import com.pi.clique_vagas_api.resources.dto.authentication.AuthenticationDto;
+import com.pi.clique_vagas_api.resources.dto.authentication.LoginResponseDto;
+import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,14 +1,14 @@
 package com.pi.clique_vagas_api.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
+import com.pi.clique_vagas_api.model.AddressModel;
 import com.pi.clique_vagas_api.model.users.UserModel;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserModel, Long> {
-    UserDetails findByEmail(String email);
+public interface AddressUserRepository extends JpaRepository<AddressModel, Long> {
 
-    UserModel findByCpf(String cpf);
+    AddressModel findByUser(UserModel user);
+
 }
