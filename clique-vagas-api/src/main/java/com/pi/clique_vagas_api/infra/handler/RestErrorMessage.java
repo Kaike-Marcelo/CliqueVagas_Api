@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.infra;
+package com.pi.clique_vagas_api.infra.handler;
 
 import org.springframework.http.HttpStatus;
 

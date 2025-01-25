@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.pi.clique_vagas_api.repository.UserRepository;
+import com.pi.clique_vagas_api.repository.users.UserRepository;
 
 @Service
 public class AuthorizationService implements UserDetailsService {

@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.model.users;
+package com.pi.clique_vagas_api.resources.enums;
 
 public enum UserRole {
     ADMIN("admin"),

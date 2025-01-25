@@ -11,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.pi.clique_vagas_api.resources.enums.UserRole;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -78,14 +80,10 @@ public class UserModel implements UserDetails {
         if (this.role == UserRole.INTERN)
             return List.of(new SimpleGrantedAuthority("ROLE_INTERN"), new SimpleGrantedAuthority("ROLE_USER"));
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        // throw new UnsupportedOperationException("Unimplemented method
-        // 'getAuthorities'");
     }
 
     @Override
     public String getUsername() {
         return email;
-        // throw new UnsupportedOperationException("Unimplemented method
-        // 'getUsername'");
     }
 }
