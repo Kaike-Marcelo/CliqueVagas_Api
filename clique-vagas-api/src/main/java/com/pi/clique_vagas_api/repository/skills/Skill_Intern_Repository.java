@@ -1,6 +1,7 @@
 package com.pi.clique_vagas_api.repository.skills;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface Skill_Intern_Repository extends JpaRepository<Skill_Intern_Mode
     List<Skill_Intern_Model> findAllByIdIntern(InternModel idIntern);
 
     Skill_Intern_Model findByIdInternAndIdSkill(InternModel idIntern, SkillModel idSkill);
+
+    Optional<Skill_Intern_Model> findByIdAndIdIntern(Long id, InternModel idIntern);
 }

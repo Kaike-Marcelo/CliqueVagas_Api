@@ -11,10 +11,11 @@ import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.repository.users.InternRepository;
-import com.pi.clique_vagas_api.resources.dto.user.intern.CreateInternDto;
-import com.pi.clique_vagas_api.resources.dto.user.intern.GetInternDto;
+import com.pi.clique_vagas_api.resources.dto.user.intern.InternDto;
+import com.pi.clique_vagas_api.resources.dto.user.intern.InternProfileDto;
 import com.pi.clique_vagas_api.resources.enums.UserRole;
 import com.pi.clique_vagas_api.service.AddressService;
+import com.pi.clique_vagas_api.service.CertificateService;
 import com.pi.clique_vagas_api.service.skills.Skill_Intern_Service;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
@@ -25,40 +26,28 @@ public class InternService {
     private InternRepository internRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private AddressService addressService;
 
     @Autowired
     @Lazy
     private Skill_Intern_Service skillInternService;
 
+    @Autowired
+    private CertificateService certificateService;
+
     @Transactional
-    public InternModel createIntern(CreateInternDto body) {
+    public InternModel createIntern(InternDto body, UserModel user) {
 
         try {
-
-            var userDto = body.getUser();
-            var addressDto = body.getAddress();
-            var internDto = body.getIntern();
-
-            if (userDto.role() != UserRole.INTERN)
-                throw new EventNotFoundException("User is not an intern");
-
-            var user = userService.createUser(userDto);
-
-            addressService.createAddress(addressDto, user);
-
             var internModel = new InternModel(
                     null,
                     user,
-                    internDto.dateOfBirth(),
-                    internDto.sex(),
-                    internDto.educationalInstitution(),
-                    internDto.areaOfInterest(),
-                    internDto.yearOfEntry(),
-                    internDto.expectedGraduationDate(),
+                    body.dateOfBirth(),
+                    body.sex(),
+                    body.educationalInstitution(),
+                    body.areaOfInterest(),
+                    body.yearOfEntry(),
+                    body.expectedGraduationDate(),
                     DateUtils.nowInZone(),
                     null);
 
@@ -78,28 +67,42 @@ public class InternService {
                 .orElseThrow(() -> new EventNotFoundException("Intern not found with ID: " + id));
     }
 
+    public InternModel getInternByUser(UserModel user) {
+        return internRepository.findByUserId(user)
+                .orElseThrow(() -> new EventNotFoundException("Intern not found"));
+    }
+
     @Transactional
-    public GetInternDto getDataByIdUser(Long id) {
-        var user = userService.getUserById(id);
+    public InternProfileDto getDataByIdUser(UserModel user) {
 
         if (user.getRole() != UserRole.INTERN)
             throw new EventNotFoundException("User is not an intern");
 
-        var intern = internRepository.findByUserId(user);
+        var intern = getInternByIdUser(user);
         var address = addressService.getAddressDtoByUserId(user);
         var skills = skillInternService.getSkillsDtoByInternId(intern);
+        var certificates = certificateService.getCertificatesByInternId(intern);
 
-        GetInternDto getInternDto = new GetInternDto();
+        InternDto internDto = new InternDto(
+                intern.getDateOfBirth(),
+                intern.getSex(),
+                intern.getEducatinoalInstitution(),
+                intern.getAreaOfInterest(),
+                intern.getYearOfEntry(),
+                intern.getExpectedGraduationDate());
+
+        InternProfileDto getInternDto = new InternProfileDto();
+        getInternDto.setUser(user);
         getInternDto.setAddress(address);
-        getInternDto.setIntern(intern);
+        getInternDto.setIntern(internDto);
         getInternDto.setSkillIntern(skills);
+        getInternDto.setCertificates(certificates);
 
         return getInternDto;
     }
 
     public InternModel getInternByIdUser(UserModel user) {
-        // var user = userService.getUserById(id);
-        return internRepository.findByUserId(user);
+        return internRepository.findByUserId(user).orElseThrow(() -> new EventNotFoundException("Intern not found"));
     }
 
     public void deleteIntern(Long id) {

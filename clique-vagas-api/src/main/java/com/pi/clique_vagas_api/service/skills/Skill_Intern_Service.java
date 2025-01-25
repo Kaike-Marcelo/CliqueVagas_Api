@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
+import com.pi.clique_vagas_api.model.skills.SkillModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.repository.skills.Skill_Intern_Repository;
+import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_Dto;
 import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_WithIdDto;
-import com.pi.clique_vagas_api.resources.dto.skill.Intern.Skill_Intern_Dto;
-import com.pi.clique_vagas_api.service.users.InternService;
+import com.pi.clique_vagas_api.utils.DateUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -21,22 +22,9 @@ public class Skill_Intern_Service {
     @Autowired
     private Skill_Intern_Repository skillInternRepository;
 
-    @Autowired
-    private SkillService skillService;
-
-    @Autowired
-    private InternService internService;
-
     @Transactional
-    public Skill_Intern_Model createSkillIntern(Skill_Intern_Dto skillIntern) {
-
-        var skill = skillService.getSkillById(skillIntern.getIdSkill());
-
-        var intern = internService.getInternByIdUser(skillIntern.getIdUser());
-
-        if (skill == null || intern == null) {
-            throw new EventNotFoundException("Skill or Intern not found");
-        }
+    public Skill_Intern_Model createSkillIntern(SkillModel skill, InternModel intern,
+            Skill_Intermediate_Dto skillIntern) {
 
         var isDataExists = skillInternRepository
                 .findByIdInternAndIdSkill(intern, skill);
@@ -49,10 +37,22 @@ public class Skill_Intern_Service {
                 null,
                 intern,
                 skill,
-                skillIntern.getProficiencyLevel());
+                skillIntern.getProficiencyLevel(),
+                DateUtils.nowInZone(),
+                null);
 
         skillInternRepository.save(skillInternModel);
         return skillInternModel;
+    }
+
+    public Skill_Intern_Model getSkillInternById(Long id) {
+        return skillInternRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Skill not found"));
+    }
+
+    public Skill_Intern_Model getSkillInternByIdAndIdIntern(Long id, InternModel intern) {
+        return skillInternRepository.findByIdAndIdIntern(id, intern)
+                .orElseThrow(() -> new EventNotFoundException("Skill not found"));
     }
 
     public List<Skill_Intern_Model> getSkillsFromInternByUserId(InternModel intern) {
@@ -69,6 +69,16 @@ public class Skill_Intern_Service {
                         skill.getIdSkill(),
                         skill.getProficiencyLevel()))
                 .toList();
+    }
+
+    @Transactional
+    public Skill_Intern_Model updateSkillIntern(Skill_Intermediate_WithIdDto body, InternModel intern) {
+        var skillIntern = getSkillInternByIdAndIdIntern(body.id(), intern);
+
+        skillIntern.setProficiencyLevel(body.proficiencyLevel());
+        skillIntern.setUpdatedAt(DateUtils.nowInZone());
+
+        return skillInternRepository.save(skillIntern);
     }
 
     public void deleteSkillIntern(Long id) {

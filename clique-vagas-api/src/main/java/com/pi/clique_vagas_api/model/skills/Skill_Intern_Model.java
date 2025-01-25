@@ -1,6 +1,10 @@
 package com.pi.clique_vagas_api.model.skills;
 
+import java.time.ZonedDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.resources.enums.skill.ProficiencyLevel;
@@ -41,4 +45,11 @@ public class Skill_Intern_Model {
 
     @Column(name = "proficiency_level", length = 20)
     private ProficiencyLevel proficiencyLevel;
+
+    @CreationTimestamp
+    private ZonedDateTime createdAt;
+
+    @UpdateTimestamp
+    private ZonedDateTime updatedAt;
+
 }
