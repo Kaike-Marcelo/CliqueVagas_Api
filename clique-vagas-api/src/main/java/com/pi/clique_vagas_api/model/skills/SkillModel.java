@@ -26,7 +26,7 @@ import lombok.Setter;
 public class SkillModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long SkillId;
+    private Long skillId;
 
     @Column(name = "name", length = 50)
     @NotNull

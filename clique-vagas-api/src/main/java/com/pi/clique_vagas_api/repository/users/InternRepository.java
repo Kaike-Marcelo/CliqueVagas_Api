@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.repository;
+package com.pi.clique_vagas_api.repository.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

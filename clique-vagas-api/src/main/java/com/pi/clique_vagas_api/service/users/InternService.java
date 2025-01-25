@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
+import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
-import com.pi.clique_vagas_api.repository.InternRepository;
+import com.pi.clique_vagas_api.repository.users.InternRepository;
 import com.pi.clique_vagas_api.resources.dto.user.intern.CreateInternDto;
 import com.pi.clique_vagas_api.resources.dto.user.intern.GetInternDto;
 import com.pi.clique_vagas_api.resources.enums.UserRole;
@@ -96,8 +97,8 @@ public class InternService {
         return getInternDto;
     }
 
-    public InternModel getInternByIdUser(Long id) {
-        var user = userService.getUserById(id);
+    public InternModel getInternByIdUser(UserModel user) {
+        // var user = userService.getUserById(id);
         return internRepository.findByUserId(user);
     }
 

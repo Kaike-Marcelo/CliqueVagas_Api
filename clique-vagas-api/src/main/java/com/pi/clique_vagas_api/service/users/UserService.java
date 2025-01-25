@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
-import com.pi.clique_vagas_api.repository.UserRepository;
+import com.pi.clique_vagas_api.repository.users.UserRepository;
 import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
@@ -38,26 +38,17 @@ public class UserService {
                 encryptedPassword,
                 DateUtils.nowInZone(),
                 null);
-        return userRepository.save(user);// .getUserId();
+        return userRepository.save(user);
 
-        // var user = new UserModel(
-        // null,
-        // userDto.firstName(),
-        // userDto.lastName(),
-        // userDto.role(),
-        // userDto.cpf(),
-        // userDto.phone(),
-        // userDto.email(),
-        // userDto.password(),
-        // DateUtils.nowInZone(),
-        // null);
-        // var userSaved = userRepository.save(user);
-        // return userSaved.getUserId();
     }
 
     public UserModel getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EventNotFoundException("User not found with ID: " + userId));
+    }
+
+    public UserModel findByEmail(String email) {
+        return (UserModel) userRepository.findByEmail(email);
     }
 
     public List<UserModel> getAllUsers() {

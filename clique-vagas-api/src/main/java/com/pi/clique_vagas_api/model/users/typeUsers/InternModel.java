@@ -51,7 +51,7 @@ public class InternModel {
 
     @Column(name = "educational_institution", length = 100)
     @NotNull
-    private String educatinalInstitution;
+    private String educatinoalInstitution;
 
     @Column(name = "area_of_interest", length = 100)
     @NotNull
