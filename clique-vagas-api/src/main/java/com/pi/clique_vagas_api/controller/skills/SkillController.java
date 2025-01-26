@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.controller;
+package com.pi.clique_vagas_api.controller.skills;
 
 import java.net.URI;
 import java.util.List;

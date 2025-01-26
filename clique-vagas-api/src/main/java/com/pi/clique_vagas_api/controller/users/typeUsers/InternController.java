@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.controller;
+package com.pi.clique_vagas_api.controller.users.typeUsers;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import com.pi.clique_vagas_api.resources.dto.user.intern.CreateInternDto;
 import com.pi.clique_vagas_api.resources.dto.user.intern.InternProfileDto;
 import com.pi.clique_vagas_api.resources.enums.UserRole;
 import com.pi.clique_vagas_api.service.AddressService;
-import com.pi.clique_vagas_api.service.users.InternService;
 import com.pi.clique_vagas_api.service.users.UserService;
+import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
 
 @RestController
 @RequestMapping("/intern")
@@ -64,5 +64,4 @@ public class InternController {
         }
         return ResponseEntity.ok(intern);
     }
-
 }

@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.controller;
+package com.pi.clique_vagas_api.controller.users;
 
 import java.net.URI;
 import java.util.List;
@@ -20,8 +20,9 @@ import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.resources.dto.user.GetDataUserGeneric;
 import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 import com.pi.clique_vagas_api.resources.enums.UserRole;
-import com.pi.clique_vagas_api.service.users.InternService;
 import com.pi.clique_vagas_api.service.users.UserService;
+import com.pi.clique_vagas_api.service.users.typeUsers.CompanyService;
+import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
 
 @RestController
 @RequestMapping("/user")
@@ -32,6 +33,9 @@ public class UserController {
 
     @Autowired
     private InternService internService;
+
+    @Autowired
+    private CompanyService companyService;
 
     @PostMapping
     public ResponseEntity<UserModel> createUser(@RequestBody UserDto body) {
@@ -64,12 +68,19 @@ public class UserController {
             data = internService.getDataByIdUser(user);
         }
 
+        if (user.getRole() == UserRole.COMPANY) {
+            data = companyService.getDataByIdUser(user);
+        }
+
         return ResponseEntity.ok(data);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUserById(@PathVariable("id") Long userId, @RequestBody UserDto body) {
-        userService.updateUserById(userId, body);
+    @PutMapping
+    public ResponseEntity<Void> updateUserById(@AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody UserDto body) {
+
+        var user = userService.findByEmail(userDetails.getUsername());
+        userService.updateUserById(user, body);
         return ResponseEntity.noContent().build();
     }
 

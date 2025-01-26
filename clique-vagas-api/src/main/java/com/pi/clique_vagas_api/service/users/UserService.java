@@ -55,30 +55,27 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void updateUserById(Long userId, UserDto userDto) {
-        var userModel = userRepository.findById(userId);
+    public UserModel updateUserById(UserModel user, UserDto userDto) {
 
-        if (userModel.isPresent()) {
-            var user = userModel.get();
+        if (user == null)
+            throw new EventNotFoundException("User not found with ID: ");
 
-            if (userDto.firstName() != null)
-                user.setFirstName(userDto.firstName());
-            if (userDto.lastName() != null)
-                user.setLastName(userDto.lastName());
-            if (userDto.cpf() != null)
-                user.setCpf(userDto.cpf());
-            if (userDto.phone() != null)
-                user.setPhone(userDto.phone());
-            if (userDto.email() != null)
-                user.setEmail(userDto.email());
-            if (userDto.password() != null)
-                user.setPassword(userDto.password());
+        if (userDto.firstName() != null)
+            user.setFirstName(userDto.firstName());
+        if (userDto.lastName() != null)
+            user.setLastName(userDto.lastName());
+        if (userDto.cpf() != null)
+            user.setCpf(userDto.cpf());
+        if (userDto.phone() != null)
+            user.setPhone(userDto.phone());
+        if (userDto.email() != null)
+            user.setEmail(userDto.email());
+        if (userDto.password() != null)
+            user.setPassword(userDto.password());
 
-            user.setUpdatedAt(DateUtils.nowInZone());
+        user.setUpdatedAt(DateUtils.nowInZone());
 
-            userRepository.save(user);
-        }
-
+        return userRepository.save(user);
     }
 
     public void deleteById(Long id) {

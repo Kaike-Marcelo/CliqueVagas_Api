@@ -59,30 +59,30 @@ public class AddressService {
                 address.getState());
     }
 
-    public void updateAddress(Long addressId, AddressDto addressDto) {
+    public AddressModel updateAddress(Long addressId, AddressDto addressDto) {
 
         var addressModel = addressRepository.findById(addressId);
 
-        if (addressModel.isPresent()) {
-            var address = addressModel.get();
+        if (!addressModel.isPresent())
+            throw new RuntimeException("Address not found");
 
-            if (addressDto.cep() != null)
-                address.setCep(addressDto.cep());
-            if (addressDto.city() != null)
-                address.setCity(addressDto.city());
-            if (addressDto.neighborhood() != null)
-                address.setNeighborhood(addressDto.neighborhood());
-            if (addressDto.state() != null)
-                address.setState(addressDto.state());
-            if (addressDto.street() != null)
-                address.setStreet(addressDto.street());
-            if (addressDto.country() != null)
-                address.setCountry(addressDto.country());
+        var address = addressModel.get();
 
-            address.setUpdatedAt(DateUtils.nowInZone());
+        if (addressDto.cep() != null)
+            address.setCep(addressDto.cep());
+        if (addressDto.city() != null)
+            address.setCity(addressDto.city());
+        if (addressDto.neighborhood() != null)
+            address.setNeighborhood(addressDto.neighborhood());
+        if (addressDto.state() != null)
+            address.setState(addressDto.state());
+        if (addressDto.street() != null)
+            address.setStreet(addressDto.street());
+        if (addressDto.country() != null)
+            address.setCountry(addressDto.country());
+        address.setUpdatedAt(DateUtils.nowInZone());
 
-            addressRepository.save(address);
-        }
+        return addressRepository.save(address);
     }
 
     public void deleteAddress(Long addressId) {

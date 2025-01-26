@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.controller;
+package com.pi.clique_vagas_api.controller.skills;
 
 import java.net.URI;
 import java.util.List;
@@ -21,8 +21,8 @@ import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_Dto;
 import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_WithIdDto;
 import com.pi.clique_vagas_api.service.skills.SkillService;
 import com.pi.clique_vagas_api.service.skills.Skill_Intern_Service;
-import com.pi.clique_vagas_api.service.users.InternService;
 import com.pi.clique_vagas_api.service.users.UserService;
+import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
 
 @RestController
 @RequestMapping("/skill_intern")

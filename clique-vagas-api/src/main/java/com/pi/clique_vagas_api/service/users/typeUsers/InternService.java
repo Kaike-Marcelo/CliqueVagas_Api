@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.service.users;
+package com.pi.clique_vagas_api.service.users.typeUsers;
 
 import java.util.List;
 
@@ -72,6 +72,10 @@ public class InternService {
                 .orElseThrow(() -> new EventNotFoundException("Intern not found"));
     }
 
+    public InternModel getInternByIdUser(UserModel user) {
+        return internRepository.findByUserId(user).orElseThrow(() -> new EventNotFoundException("Intern not found"));
+    }
+
     @Transactional
     public InternProfileDto getDataByIdUser(UserModel user) {
 
@@ -99,10 +103,6 @@ public class InternService {
         getInternDto.setCertificates(certificates);
 
         return getInternDto;
-    }
-
-    public InternModel getInternByIdUser(UserModel user) {
-        return internRepository.findByUserId(user).orElseThrow(() -> new EventNotFoundException("Intern not found"));
     }
 
     public void deleteIntern(Long id) {

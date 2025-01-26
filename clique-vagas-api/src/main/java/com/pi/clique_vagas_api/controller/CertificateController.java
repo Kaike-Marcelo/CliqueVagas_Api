@@ -21,8 +21,8 @@ import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.resources.dto.certificate.CertificateDto;
 import com.pi.clique_vagas_api.resources.dto.certificate.CertificateWithIdDto;
 import com.pi.clique_vagas_api.service.CertificateService;
-import com.pi.clique_vagas_api.service.users.InternService;
 import com.pi.clique_vagas_api.service.users.UserService;
+import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
 
 @RestController
 @RequestMapping("/certificates")
