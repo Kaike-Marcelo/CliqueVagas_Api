@@ -41,8 +41,7 @@ public class Skill_Intern_Service {
                 DateUtils.nowInZone(),
                 null);
 
-        skillInternRepository.save(skillInternModel);
-        return skillInternModel;
+        return skillInternRepository.save(skillInternModel);
     }
 
     public Skill_Intern_Model getSkillInternById(Long id) {

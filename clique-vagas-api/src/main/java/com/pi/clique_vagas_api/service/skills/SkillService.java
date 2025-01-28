@@ -36,16 +36,25 @@ public class SkillService {
         return skillSaved;
     }
 
-    public List<SkillModel> getAllSkills() {
-        return skillRepository.findAll();
-    }
-
     public SkillModel getSkillById(Long id) {
         return skillRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Skill not found with ID: " + id));
     }
 
+    public List<SkillModel> getAllSkills() {
+        return skillRepository.findAll();
+    }
+
+    public List<SkillModel> getAllSkillsById(List<Long> skillsId) {
+        return skillRepository.findAllById(skillsId);
+    }
+
     public List<SkillModel> getSkillByType(TypeSkill type) {
+
+        if (type == null) {
+            throw new EventNotFoundException("Type not found");
+        }
+
         return skillRepository.findAllByType(type);
     }
 
