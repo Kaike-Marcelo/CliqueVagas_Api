@@ -12,10 +12,10 @@ import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 @Repository
 public interface JobPostingRepository extends JpaRepository<JobPostingModel, Long> {
 
-    Optional<JobPostingModel> findByIdAndCompanyId(Long id, CompanyModel companyId);
+    Optional<JobPostingModel> findByIdAndCompany(Long id, CompanyModel companyId);
 
-    Optional<JobPostingModel> findByCompanyId(CompanyModel companyId);
+    Optional<JobPostingModel> findByCompany(CompanyModel companyId);
 
-    List<JobPostingModel> findAllByCompanyId(CompanyModel companyId);
+    List<JobPostingModel> findAllByCompany(CompanyModel companyId);
 
 }

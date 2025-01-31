@@ -1,5 +1,6 @@
 package com.pi.clique_vagas_api.service.skills;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import com.pi.clique_vagas_api.model.skills.SkillModel;
 import com.pi.clique_vagas_api.model.skills.Skill_JobPosting_Model;
 import com.pi.clique_vagas_api.repository.skills.Skill_JobPost_Repository;
 import com.pi.clique_vagas_api.resources.dto.jobPost.GetJobPostDto;
+import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_Dto;
 import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_WithIdDto;
+import com.pi.clique_vagas_api.resources.dto.skill.jobPost.GetSkillsJobPosting;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 import jakarta.transaction.Transactional;
@@ -23,9 +26,6 @@ public class Skill_JobPost_Service {
     @Autowired
     private Skill_JobPost_Repository skillPostRepository;
 
-    @Autowired
-    private SkillService skillService;
-
     @Transactional
     public Skill_JobPosting_Model createSkillPost(SkillModel skill, JobPostingModel post,
             Skill_Intermediate_Dto skillPost) {
@@ -33,7 +33,7 @@ public class Skill_JobPost_Service {
         var isDataExists = skillPostRepository
                 .findByIdJobPostingAndIdSkill(post, skill);
 
-        if (isDataExists != null) {
+        if (isDataExists.isPresent()) {
             throw new EventNotFoundException("Skill already exists for this post");
         }
 
@@ -46,32 +46,6 @@ public class Skill_JobPost_Service {
                 null);
 
         return skillPostRepository.save(skillPostModel);
-    }
-
-    @Transactional
-    public void saveProcessSkillsForPost(List<Skill_Intermediate_Dto> skills, JobPostingModel post) {
-        for (Skill_Intermediate_Dto skillPost : skills) {
-            var skill = skillService.getSkillById(skillPost.getIdSkill());
-            createSkillPost(skill, post, skillPost);
-        }
-    }
-
-    @Transactional
-    public void updateProcessSkillsForPost(List<Skill_Intermediate_Dto> skills, JobPostingModel post) {
-        for (Skill_Intermediate_Dto skillPost : skills) {
-            var skillModel = skillService.getSkillById(skillPost.getIdSkill());
-            var skill = getSkillPostByIdJobPostingIdAndIdSkill(post, skillModel);
-
-            skill.setProficiencyLevel(skillPost.getProficiencyLevel());
-            skill.setUpdatedAt(DateUtils.nowInZone());
-
-            Skill_Intermediate_WithIdDto skillDto = new Skill_Intermediate_WithIdDto(
-                    skill.getId(),
-                    skill.getIdSkill(),
-                    skill.getProficiencyLevel());
-
-            updateSkillPost(skillDto, post);
-        }
     }
 
     public Skill_JobPosting_Model getSkillPostById(Long id) {
@@ -107,11 +81,25 @@ public class Skill_JobPost_Service {
 
     public List<GetJobPostDto> findAllCompletePostsByIdPost(List<JobPostingModel> posts) {
 
-        List<GetJobPostDto> postDto = List.of();
+        List<GetJobPostDto> postDto = new ArrayList<>();
 
         for (JobPostingModel post : posts) {
             var skills = skillPostRepository.findAllByIdJobPosting(post);
-            postDto.add(new GetJobPostDto(post, skills));
+
+            List<GetSkillsJobPosting> skillDtos = skills.stream()
+                    .map(skill -> new GetSkillsJobPosting(skill.getId(), skill.getIdSkill(),
+                            skill.getProficiencyLevel()))
+                    .toList();
+
+            JobPostWithIdDto jobPostWithIdDto = new JobPostWithIdDto(
+                    post.getId(),
+                    post.getTitle(),
+                    post.getDescription(),
+                    post.getJobPostingStatus(),
+                    post.getAddress(),
+                    post.getApplicationDeadline());
+
+            postDto.add(new GetJobPostDto(jobPostWithIdDto, skillDtos));
         }
         return postDto;
     }

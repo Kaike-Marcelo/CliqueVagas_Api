@@ -2,8 +2,7 @@ package com.pi.clique_vagas_api.resources.dto.jobPost;
 
 import java.util.List;
 
-import com.pi.clique_vagas_api.model.JobPostingModel;
-import com.pi.clique_vagas_api.model.skills.Skill_JobPosting_Model;
+import com.pi.clique_vagas_api.resources.dto.skill.jobPost.GetSkillsJobPosting;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GetJobPostDto {
 
-        private JobPostingModel jobPost;
-        private List<Skill_JobPosting_Model> skillJobPost;
+        private JobPostWithIdDto jobPost;
+        private List<GetSkillsJobPosting> skillJobPost;
 
 }

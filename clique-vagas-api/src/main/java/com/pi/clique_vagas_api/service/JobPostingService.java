@@ -37,17 +37,17 @@ public class JobPostingService {
     }
 
     public JobPostingModel findByCompanyId(CompanyModel company) {
-        return jobPostingRepository.findByCompanyId(company)
+        return jobPostingRepository.findByCompany(company)
                 .orElseThrow(() -> new RuntimeException("Job Posting not found"));
     }
 
     public JobPostingModel findByIdAndCompanyId(Long id, CompanyModel company) {
-        return jobPostingRepository.findByIdAndCompanyId(id, company)
+        return jobPostingRepository.findByIdAndCompany(id, company)
                 .orElseThrow(() -> new RuntimeException("Job Posting not found"));
     }
 
     public List<JobPostingModel> findAllPostsByIdCompany(CompanyModel company) {
-        return jobPostingRepository.findAllByCompanyId(company);
+        return jobPostingRepository.findAllByCompany(company);
     }
 
     public JobPostingModel update(JobPostWithIdDto post, CompanyModel company) {

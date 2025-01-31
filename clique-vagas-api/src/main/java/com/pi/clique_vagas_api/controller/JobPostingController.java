@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pi.clique_vagas_api.resources.dto.jobPost.GetJobPostDto;
-import com.pi.clique_vagas_api.resources.dto.jobPost.PostJobPostDto;
-import com.pi.clique_vagas_api.resources.dto.jobPost.PutJobPostDto;
+import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
+import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.service.JobPostingService;
 import com.pi.clique_vagas_api.service.skills.Skill_JobPost_Service;
 import com.pi.clique_vagas_api.service.users.UserService;
@@ -40,27 +40,22 @@ public class JobPostingController {
 
     @PostMapping
     private ResponseEntity<Long> saveJobPosting(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody PostJobPostDto postDto) {
+            @RequestBody JobPostDto postDto) {
 
         var user = userService.findByEmail(userDetails.getUsername());
         var company = companyService.getCompanyByIdUser(user);
-        var post = jobPostingService.save(postDto.getJobPost(), company);
-
-        skill_JobPost_Service.saveProcessSkillsForPost(postDto.getSkillJobPost(), post);
+        var post = jobPostingService.save(postDto, company);
 
         return ResponseEntity.ok(post.getId());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     private ResponseEntity<Long> updateJobPosting(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody PutJobPostDto postDto,
-            @PathVariable("id") Long id) {
+            @RequestBody JobPostWithIdDto postDto) {
 
         var user = userService.findByEmail(userDetails.getUsername());
         var company = companyService.getCompanyByIdUser(user);
-        var post = jobPostingService.update(postDto.getJobPost(), company);
-
-        skill_JobPost_Service.updateProcessSkillsForPost(postDto.getSkillJobPost(), post);
+        var post = jobPostingService.update(postDto, company);
 
         return ResponseEntity.ok(post.getId());
     }
