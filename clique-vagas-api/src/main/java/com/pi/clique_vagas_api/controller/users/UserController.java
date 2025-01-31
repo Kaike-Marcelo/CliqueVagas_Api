@@ -17,12 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pi.clique_vagas_api.model.users.UserModel;
-import com.pi.clique_vagas_api.resources.dto.user.GetDataUserGeneric;
 import com.pi.clique_vagas_api.resources.dto.user.UserDto;
-import com.pi.clique_vagas_api.resources.enums.UserRole;
 import com.pi.clique_vagas_api.service.users.UserService;
-import com.pi.clique_vagas_api.service.users.typeUsers.CompanyService;
-import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
 
 @RestController
 @RequestMapping("/user")
@@ -30,12 +26,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private InternService internService;
-
-    @Autowired
-    private CompanyService companyService;
 
     @PostMapping
     public ResponseEntity<UserModel> createUser(@RequestBody UserDto body) {
@@ -56,23 +46,6 @@ public class UserController {
     public ResponseEntity<List<UserModel>> getAllUsers() {
         var users = userService.getAllUsers();
         return ResponseEntity.ok(users);
-    }
-
-    @GetMapping("/profile")
-    public ResponseEntity<GetDataUserGeneric> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        GetDataUserGeneric data = null;
-
-        var user = userService.findByEmail(userDetails.getUsername());
-
-        if (user.getRole() == UserRole.INTERN) {
-            data = internService.getDataByIdUser(user);
-        }
-
-        if (user.getRole() == UserRole.COMPANY) {
-            data = companyService.getDataByIdUser(user);
-        }
-
-        return ResponseEntity.ok(data);
     }
 
     @PutMapping

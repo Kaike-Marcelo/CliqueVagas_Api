@@ -5,18 +5,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.users.UserRepository;
 import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
+import com.pi.clique_vagas_api.utils.FileUtils;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final String PROFILE_DIR = "files/users/profile/";
 
     public UserModel createUser(UserDto data) {
 
@@ -31,6 +35,7 @@ public class UserService {
                 null,
                 data.firstName(),
                 data.lastName(),
+                null,
                 data.role(),
                 data.cpf(),
                 data.phone(),
@@ -40,6 +45,25 @@ public class UserService {
                 null);
         return userRepository.save(user);
 
+    }
+
+    public UserModel savePhotoProfile(MultipartFile file, Long userId) {
+
+        UserModel user = getUserById(userId);
+
+        String existingImageUrl = user.getUrlImageProfile();
+        if (existingImageUrl != null && !existingImageUrl.isEmpty()) {
+            FileUtils.deleteFile(existingImageUrl);
+        }
+
+        if (!FileUtils.isValidContentTypeImage(file.getContentType()))
+            throw new IllegalArgumentException("File must be a image.");
+
+        var url = FileUtils.saveFileInDirectory(file, userId, PROFILE_DIR, "profile");
+
+        user.setUrlImageProfile(url);
+
+        return userRepository.save(user);
     }
 
     public UserModel getUserById(Long userId) {
@@ -82,6 +106,17 @@ public class UserService {
         var userExists = userRepository.existsById(id);
         if (userExists) {
             userRepository.deleteById(id);
+        }
+    }
+
+    public void deletePhotoProfile(Long userId) {
+        UserModel user = getUserById(userId);
+
+        String existingImageUrl = user.getUrlImageProfile();
+        if (existingImageUrl != null && !existingImageUrl.isEmpty()) {
+            FileUtils.deleteFile(existingImageUrl);
+            user.setUrlImageProfile(null);
+            userRepository.save(user);
         }
     }
 }

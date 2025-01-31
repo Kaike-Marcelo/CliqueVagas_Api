@@ -59,6 +59,7 @@ public class AuthenticationController {
                 null,
                 data.firstName(),
                 data.lastName(),
+                null,
                 data.role(),
                 data.cpf(),
                 data.phone(),

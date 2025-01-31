@@ -45,6 +45,9 @@ public class UserModel implements UserDetails {
     @NotNull
     private String lastName;
 
+    @Column(name = "url_image_profile", length = 255)
+    private String urlImageProfile;
+
     @Column(name = "role", length = 50)
     @NotNull
     private UserRole role;

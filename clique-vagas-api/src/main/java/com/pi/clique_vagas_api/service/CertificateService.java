@@ -2,13 +2,11 @@ package com.pi.clique_vagas_api.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.CertificateModel;
@@ -40,7 +38,11 @@ public class CertificateService {
             if (certificateDto.getCreditHours() < 0)
                 throw new IllegalArgumentException("Credit hours cannot be negative");
 
-            url = saveFile(certificateDto.getFile(), intern.getId());
+            if (!FileUtils.isValidContentTypeImageOrPdf(certificateDto.getFile().getContentType()))
+                throw new IllegalArgumentException("File must be a PDF, PNG, JPG or JPEG");
+
+            url = FileUtils.saveFileInDirectory(certificateDto.getFile(), intern.getId(), CERTIFICATE_DIR,
+                    "Certificado_");
 
             var certificate = new CertificateModel(
                     null,
@@ -65,38 +67,6 @@ public class CertificateService {
                 }
             }
             throw new RuntimeException("Error saving certificate", e);
-        }
-    }
-
-    private String saveFile(MultipartFile file, Long userId) {
-        Path filePath = null;
-        try {
-            String contentType = file.getContentType();
-
-            if (!FileUtils.isValidContentTypeImageOrPdf(contentType))
-                throw new IllegalArgumentException("File must be a PDF, PNG, JPG or JPEG");
-
-            String nameFileOrigin = file.getOriginalFilename();
-            String fileExtension = FileUtils.getFileExtension(nameFileOrigin);
-
-            String fileName = ("Certificado_" + System.currentTimeMillis() + fileExtension);
-
-            Path userDir = Paths.get(CERTIFICATE_DIR + userId);
-            Files.createDirectories(userDir);
-            filePath = userDir.resolve(fileName);
-            Files.write(filePath, file.getBytes());
-
-            return filePath.toString();
-
-        } catch (IOException e) {
-            if (filePath != null) {
-                try {
-                    Files.deleteIfExists(filePath);
-                } catch (IOException ex) {
-                    throw new RuntimeException("Error deleting file after failure", ex);
-                }
-            }
-            throw new RuntimeException("Error creating directory or writing file", e);
         }
     }
 

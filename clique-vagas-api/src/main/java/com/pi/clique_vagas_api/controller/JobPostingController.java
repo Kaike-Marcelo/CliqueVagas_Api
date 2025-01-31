@@ -23,7 +23,7 @@ import com.pi.clique_vagas_api.service.users.UserService;
 import com.pi.clique_vagas_api.service.users.typeUsers.CompanyService;
 
 @RestController
-@RequestMapping("/job-posting")
+@RequestMapping("/job_posting")
 public class JobPostingController {
 
     @Autowired
@@ -60,7 +60,7 @@ public class JobPostingController {
         return ResponseEntity.ok(post.getId());
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("company/{email}")
     private ResponseEntity<List<GetJobPostDto>> getJobPosting(@PathVariable("email") String email) {
         var user = userService.findByEmail(email);
         var company = companyService.getCompanyByIdUser(user);
