@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.users.UserRepository;
-import com.pi.clique_vagas_api.resources.dto.user.UserDto;
+import com.pi.clique_vagas_api.resources.dto.user.PostUserDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 import com.pi.clique_vagas_api.utils.FileUtils;
 
@@ -23,7 +23,7 @@ public class UserService {
 
     private static final String PROFILE_DIR = "files/users/profile/";
 
-    public UserModel createUser(UserDto data) {
+    public UserModel createUser(PostUserDto data) {
 
         if (this.userRepository.findByEmail(data.email()) != null)
             throw new DataIntegrityViolationException("User already exists with email: " + data.email());
@@ -69,7 +69,28 @@ public class UserService {
 
     public UserModel getUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new EventNotFoundException("User not found with ID: " + userId));
+                .orElseThrow(() -> new EventNotFoundException("User not found with ID: " +
+                        userId));
+    }
+
+    public byte[] getPhotoProfileByFileName(String filename) {
+        if (filename == null || filename.isEmpty())
+            throw new IllegalArgumentException("Filename is required.");
+
+        return FileUtils.loadFileFromPath(PROFILE_DIR + filename);
+    }
+
+    public byte[] getPhotoProfileByEmail(String email) {
+        var user = findByEmail(email);
+
+        if (user == null)
+            throw new EventNotFoundException("User not found with email: " + email);
+
+        String filename = user.getUrlImageProfile();
+        if (filename == null || filename.isEmpty())
+            throw new IllegalArgumentException("User does not have a profile photo.");
+
+        return FileUtils.loadFileFromPath(filename);
     }
 
     public UserModel findByEmail(String email) {
@@ -80,7 +101,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public UserModel updateUserById(UserModel user, UserDto userDto) {
+    public UserModel updateUserById(UserModel user, PostUserDto userDto) {
 
         if (user == null)
             throw new EventNotFoundException("User not found with ID: ");
@@ -110,8 +131,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void deletePhotoProfile(Long userId) {
-        UserModel user = getUserById(userId);
+    public void deletePhotoProfile(String email) {
+        UserModel user = findByEmail(email);
 
         String existingImageUrl = user.getUrlImageProfile();
         if (existingImageUrl != null && !existingImageUrl.isEmpty()) {

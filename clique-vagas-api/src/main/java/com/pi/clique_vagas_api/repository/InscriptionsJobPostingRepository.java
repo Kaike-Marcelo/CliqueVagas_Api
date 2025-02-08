@@ -17,7 +17,7 @@ public interface InscriptionsJobPostingRepository extends JpaRepository<Inscript
 
     List<InscriptionsJobPostingModel> findAllByJobPostingId(JobPostingModel jobPostingModel);
 
-    @Query("SELECT i FROM InscriptionsJobPostingModel i WHERE i.userId = :userId AND i.jobPosting.jobPostingStatus = :status")
+    @Query("SELECT i FROM InscriptionsJobPostingModel i WHERE i.userId = :userId AND i.jobPostingId.jobPostingStatus = :status")
     List<InscriptionsJobPostingModel> findAllByUserIdAndJobPostingStatus(
             @Param("userId") UserModel userId,
             @Param("status") Status status);

@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserWithAddress {
-    private UserDto user;
+    private PostUserDto user;
     private AddressDto address;
 }

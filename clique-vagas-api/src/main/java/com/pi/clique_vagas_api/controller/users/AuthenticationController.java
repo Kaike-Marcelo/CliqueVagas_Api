@@ -17,7 +17,7 @@ import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.users.UserRepository;
 import com.pi.clique_vagas_api.resources.dto.authentication.AuthenticationDto;
 import com.pi.clique_vagas_api.resources.dto.authentication.LoginResponseDto;
-import com.pi.clique_vagas_api.resources.dto.user.UserDto;
+import com.pi.clique_vagas_api.resources.dto.user.PostUserDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,7 +50,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid UserDto data) {
+    public ResponseEntity<Void> register(@RequestBody @Valid PostUserDto data) {
         if (this.userRepository.findByEmail(data.email()) != null)
             return ResponseEntity.badRequest().build();
 

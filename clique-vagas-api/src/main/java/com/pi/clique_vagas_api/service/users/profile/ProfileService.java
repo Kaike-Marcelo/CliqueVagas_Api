@@ -1,12 +1,14 @@
 package com.pi.clique_vagas_api.service.users.profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.resources.dto.user.GetDataUserGeneric;
 import com.pi.clique_vagas_api.resources.enums.UserRole;
 
+@Service
 public class ProfileService {
 
     @Autowired

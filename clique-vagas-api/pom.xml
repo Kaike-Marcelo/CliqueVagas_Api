@@ -61,8 +61,6 @@
 			<version>1.6.2</version>
 		</dependency>
 
-
-
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -80,6 +78,18 @@
 			<scope>test</scope>
     	</dependency>
 
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext7-core</artifactId>
+			<version>7.2.3</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.29</version>
+		</dependency>
 
 
 		<dependency>
@@ -110,14 +120,20 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.4.0</version>
 		</dependency>
-		
-	
-   <dependency>
-     <groupId>org.hibernate</groupId>
-     <artifactId>hibernate-core</artifactId>
-     <version>5.4.4.Final</version>
-   </dependency>
- </dependencies>
+
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.4.Final</version>
+		</dependency>
+	</dependencies>
+<repositories>
+	<repository>
+		<id>itextpdf</id>
+		<url>https://repo.itextsupport.com/releases</url>
+	</repository>
+</repositories>
 
 	<build>
 		<plugins>
