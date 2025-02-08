@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
+import com.pi.clique_vagas_api.model.users.UserModel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,14 +39,14 @@ public class InscriptionsJobPostingModel {
     private JobPostingModel jobPostingId;
 
     @ManyToOne
-    @JoinColumn(name = "intern_id", nullable = false)
-    private InternModel internId;
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserModel userId;
 
     // @Column(name = "status", length = 20, nullable = false)
     // private String status;
 
     @Column(name = "pontuation", nullable = false)
-    private Integer pontuation;
+    private Double pontuation;
 
     @CreationTimestamp
     private ZonedDateTime inscriptionDate;

@@ -11,8 +11,6 @@ import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.repository.users.CompanyRepository;
 import com.pi.clique_vagas_api.resources.dto.user.company.CompanyDto;
-import com.pi.clique_vagas_api.resources.dto.user.company.CompanyProfileDto;
-import com.pi.clique_vagas_api.service.AddressService;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 @Service
@@ -20,9 +18,6 @@ public class CompanyService {
 
     @Autowired
     private CompanyRepository companyRepository;
-
-    @Autowired
-    private AddressService addressService;
 
     @Transactional
     public CompanyModel createCompany(CompanyDto company, UserModel userModel) {
@@ -60,27 +55,6 @@ public class CompanyService {
     @Transactional
     public CompanyModel getCompanyByIdUser(UserModel user) {
         return companyRepository.findByUserId(user).orElseThrow(() -> new EventNotFoundException("Company not found"));
-    }
-
-    @Transactional
-    public CompanyProfileDto getDataByIdUser(UserModel user) {
-
-        var company = getCompanyByIdUser(user);
-        var address = addressService.getAddressDtoByUserId(user);
-
-        CompanyDto companyDto = new CompanyDto(
-                company.getCompanyName(),
-                company.getCnpj(),
-                company.getTelephoneResponsible(),
-                company.getSectorOfOperation(),
-                company.getWebsiteLink());
-
-        CompanyProfileDto companyProfile = new CompanyProfileDto();
-        companyProfile.setUser(user);
-        companyProfile.setAddress(address);
-        companyProfile.setCompany(companyDto);
-
-        return companyProfile;
     }
 
     @Transactional

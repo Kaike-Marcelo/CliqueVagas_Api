@@ -16,4 +16,14 @@ public enum ProficiencyLevel {
         return level;
     }
 
+    public double calculateSkillCompatibility(ProficiencyLevel other) {
+        if (this == other) {
+            return 1.0;
+        } else if (this.ordinal() < other.ordinal()) {
+            return 0.6;
+        } else {
+            return 0.8;
+        }
+    }
+
 }

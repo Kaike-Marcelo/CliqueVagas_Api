@@ -3,6 +3,7 @@ package com.pi.clique_vagas_api.service.users;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +26,10 @@ public class UserService {
     public UserModel createUser(UserDto data) {
 
         if (this.userRepository.findByEmail(data.email()) != null)
-            throw new EventNotFoundException("User already exists with email: " + data.email());
+            throw new DataIntegrityViolationException("User already exists with email: " + data.email());
 
         if (userRepository.findByCpf(data.cpf()) != null)
-            throw new EventNotFoundException("User already exists with CPF: " + data.cpf());
+            throw new DataIntegrityViolationException("User already exists with CPF: " + data.cpf());
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         var user = new UserModel(
@@ -103,10 +104,10 @@ public class UserService {
     }
 
     public void deleteById(Long id) {
-        var userExists = userRepository.existsById(id);
-        if (userExists) {
-            userRepository.deleteById(id);
+        if (!userRepository.existsById(id)) {
+            throw new EventNotFoundException("User not found with ID: " + id);
         }
+        userRepository.deleteById(id);
     }
 
     public void deletePhotoProfile(Long userId) {

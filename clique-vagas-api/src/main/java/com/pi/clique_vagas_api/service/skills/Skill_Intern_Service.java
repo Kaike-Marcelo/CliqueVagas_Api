@@ -3,8 +3,10 @@ package com.pi.clique_vagas_api.service.skills;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.pi.clique_vagas_api.events.InternSkillChangedEvent;
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.skills.SkillModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
@@ -21,6 +23,9 @@ public class Skill_Intern_Service {
 
     @Autowired
     private Skill_Intern_Repository skillInternRepository;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public Skill_Intern_Model createSkillIntern(SkillModel skill, InternModel intern,
@@ -41,6 +46,7 @@ public class Skill_Intern_Service {
                 DateUtils.nowInZone(),
                 null);
 
+        eventPublisher.publishEvent(new InternSkillChangedEvent(this, intern.getUserId().getUserId()));
         return skillInternRepository.save(skillInternModel);
     }
 
@@ -76,11 +82,14 @@ public class Skill_Intern_Service {
 
         skillIntern.setProficiencyLevel(body.proficiencyLevel());
         skillIntern.setUpdatedAt(DateUtils.nowInZone());
-
+        eventPublisher.publishEvent(new InternSkillChangedEvent(this, intern.getUserId().getUserId()));
         return skillInternRepository.save(skillIntern);
     }
 
     public void deleteSkillIntern(Long id) {
+        var skillIntern = getSkillInternById(id);
+        eventPublisher.publishEvent(
+                new InternSkillChangedEvent(this, skillIntern.getIdIntern().getUserId().getUserId()));
         skillInternRepository.deleteById(id);
     }
 

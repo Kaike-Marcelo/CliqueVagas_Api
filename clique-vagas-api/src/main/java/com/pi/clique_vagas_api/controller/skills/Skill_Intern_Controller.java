@@ -1,9 +1,9 @@
 package com.pi.clique_vagas_api.controller.skills;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,9 +48,9 @@ public class Skill_Intern_Controller {
         var intern = internService.getInternByIdUser(user);
         var skill = skillService.getSkillById(body.getIdSkill());
 
-        var skillInternId = skillInternService.createSkillIntern(skill, intern, body);
+        var skillIntern = skillInternService.createSkillIntern(skill, intern, body);
 
-        return ResponseEntity.created(URI.create("/skill/" + skillInternId.getId())).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(skillIntern.getId());
     }
 
     @PutMapping

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.pi.clique_vagas_api.events.JobPostingSkillChangedEvent;
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.JobPostingModel;
 import com.pi.clique_vagas_api.model.skills.SkillModel;
@@ -26,6 +28,9 @@ public class Skill_JobPost_Service {
     @Autowired
     private Skill_JobPost_Repository skillPostRepository;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     @Transactional
     public Skill_JobPosting_Model createSkillPost(SkillModel skill, JobPostingModel post,
             Skill_Intermediate_Dto skillPost) {
@@ -45,6 +50,7 @@ public class Skill_JobPost_Service {
                 DateUtils.nowInZone(),
                 null);
 
+        eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, post.getId()));
         return skillPostRepository.save(skillPostModel);
     }
 
@@ -110,11 +116,14 @@ public class Skill_JobPost_Service {
 
         skillPost.setProficiencyLevel(body.proficiencyLevel());
         skillPost.setUpdatedAt(DateUtils.nowInZone());
+        eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, post.getId()));
 
         return skillPostRepository.save(skillPost);
     }
 
     public void deleteSkillPost(Long id) {
+        var skillPost = getSkillPostById(id);
+        eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, skillPost.getId()));
         skillPostRepository.deleteById(id);
     }
 

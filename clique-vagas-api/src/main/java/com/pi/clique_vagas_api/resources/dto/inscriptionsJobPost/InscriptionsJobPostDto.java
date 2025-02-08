@@ -1,10 +1,10 @@
 package com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost;
 
 import com.pi.clique_vagas_api.model.JobPostingModel;
-import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
+import com.pi.clique_vagas_api.model.users.UserModel;
 
 public record InscriptionsJobPostDto(
-        JobPostingModel jobPostingId,
-        InternModel internId) {
+                JobPostingModel jobPostingId,
+                UserModel userId) {
 
 }

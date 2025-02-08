@@ -60,20 +60,15 @@ public class SkillService {
 
     @Transactional
     public void updateSkillById(Long skillId, CreateSkillDto skillDto) {
-        var skillModel = skillRepository.findById(skillId);
+        var skill = skillRepository.findById(skillId)
+                .orElseThrow(() -> new EventNotFoundException("Skill not found with ID: " + skillId));
 
-        if (skillModel.isPresent()) {
-            var skill = skillModel.get();
+        if (skillDto.name() != null)
+            skill.setName(skillDto.name());
+        if (skillDto.type() != null)
+            skill.setType(skillDto.type());
 
-            if (skillDto.name() != null)
-                skill.setName(skillDto.name());
-            if (skillDto.type() != null)
-                skill.setType(skillDto.type());
-
-            skillRepository.save(skill);
-        } else {
-            throw new EventNotFoundException("Skill not found with ID: " + skillId);
-        }
+        skillRepository.save(skill);
     }
 
     public void deleteById(Long skillId) {

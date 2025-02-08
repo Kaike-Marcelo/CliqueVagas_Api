@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.pi.clique_vagas_api.model.users.UserModel;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class InternModel {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private UserModel userId;
 
@@ -51,7 +52,7 @@ public class InternModel {
 
     @Column(name = "educational_institution", length = 100)
     @NotNull
-    private String educatinoalInstitution;
+    private String educationalInstitution;
 
     @Column(name = "area_of_interest", length = 100)
     @NotNull

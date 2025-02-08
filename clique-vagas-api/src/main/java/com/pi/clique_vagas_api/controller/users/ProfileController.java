@@ -5,14 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pi.clique_vagas_api.resources.dto.user.GetDataUserGeneric;
-import com.pi.clique_vagas_api.resources.enums.UserRole;
 import com.pi.clique_vagas_api.service.users.UserService;
-import com.pi.clique_vagas_api.service.users.typeUsers.CompanyService;
-import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
+import com.pi.clique_vagas_api.service.users.profile.ProfileService;
+
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/profile")
@@ -22,24 +23,32 @@ public class ProfileController {
     private UserService userService;
 
     @Autowired
-    private InternService internService;
-
-    @Autowired
-    private CompanyService companyService;
+    private ProfileService profileService;
 
     @GetMapping
+    @RolesAllowed({ "INTERN", "COMPANY" })
     public ResponseEntity<GetDataUserGeneric> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        GetDataUserGeneric data = null;
 
         var user = userService.findByEmail(userDetails.getUsername());
-
-        if (user.getRole() == UserRole.INTERN) {
-            data = internService.getDataByIdUser(user);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
         }
 
-        if (user.getRole() == UserRole.COMPANY) {
-            data = companyService.getDataByIdUser(user);
+        var data = profileService.getUserProfileByRole(user);
+
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/{email}")
+    @RolesAllowed({ "COMPANY" })
+    public ResponseEntity<GetDataUserGeneric> getProfileUser(@PathVariable String email) {
+
+        var user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
         }
+
+        var data = profileService.getUserProfileByRole(user);
 
         return ResponseEntity.ok(data);
     }
