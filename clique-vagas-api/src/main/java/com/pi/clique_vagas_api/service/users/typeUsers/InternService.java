@@ -22,10 +22,14 @@ public class InternService {
     @Transactional
     public InternModel createIntern(InternDto body, UserModel user) {
 
+        if (internRepository.findByCpf(body.cpf()) != null)
+            throw new EventNotFoundException("Intern already exists with CPF: " + body.cpf());
+
         try {
             var internModel = new InternModel(
                     null,
                     user,
+                    body.cpf(),
                     body.dateOfBirth(),
                     body.sex(),
                     body.educationalInstitution(),

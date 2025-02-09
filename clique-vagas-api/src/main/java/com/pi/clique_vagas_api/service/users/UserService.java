@@ -28,9 +28,6 @@ public class UserService {
         if (this.userRepository.findByEmail(data.email()) != null)
             throw new DataIntegrityViolationException("User already exists with email: " + data.email());
 
-        if (userRepository.findByCpf(data.cpf()) != null)
-            throw new DataIntegrityViolationException("User already exists with CPF: " + data.cpf());
-
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         var user = new UserModel(
                 null,
@@ -38,7 +35,6 @@ public class UserService {
                 data.lastName(),
                 null,
                 data.role(),
-                data.cpf(),
                 data.phone(),
                 data.email(),
                 encryptedPassword,
@@ -110,8 +106,6 @@ public class UserService {
             user.setFirstName(userDto.firstName());
         if (userDto.lastName() != null)
             user.setLastName(userDto.lastName());
-        if (userDto.cpf() != null)
-            user.setCpf(userDto.cpf());
         if (userDto.phone() != null)
             user.setPhone(userDto.phone());
         if (userDto.email() != null)

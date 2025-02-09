@@ -79,7 +79,7 @@ public class ResumeService {
                 int textFontSize = 12;
 
                 // Cores
-                contentStream.setNonStrokingColor(0, 0, 0); // Preto para texto
+                contentStream.setNonStrokingColor(java.awt.Color.BLACK); // Preto para texto
 
                 // Adicionando nome completo em destaque
                 contentStream.setFont(titleFont, nameFontSize);
@@ -112,7 +112,7 @@ public class ResumeService {
                 y -= 40;
 
                 // Adicionando seção de Certificados
-                contentStream.setNonStrokingColor(0, 0, 255); // Azul para títulos
+                contentStream.setNonStrokingColor(java.awt.Color.BLUE); // Azul para títulos
                 contentStream.setFont(titleFont, titleFontSize);
                 contentStream.beginText();
                 contentStream.newLineAtOffset(50, y);
@@ -120,7 +120,7 @@ public class ResumeService {
                 y -= 20;
                 contentStream.endText();
 
-                contentStream.setNonStrokingColor(0, 0, 0); // Preto para texto
+                contentStream.setNonStrokingColor(java.awt.Color.BLACK); // Preto para texto
                 contentStream.setFont(textFont, textFontSize);
                 contentStream.beginText();
                 contentStream.newLineAtOffset(50, y);
@@ -135,7 +135,7 @@ public class ResumeService {
                 y -= 40;
 
                 // Adicionando seção de Skills
-                contentStream.setNonStrokingColor(0, 0, 255); // Azul para títulos
+                contentStream.setNonStrokingColor(java.awt.Color.BLUE); // Azul para títulos
                 contentStream.setFont(titleFont, titleFontSize);
                 contentStream.beginText();
                 contentStream.newLineAtOffset(50, y);
@@ -143,7 +143,7 @@ public class ResumeService {
                 y -= 20;
                 contentStream.endText();
 
-                contentStream.setNonStrokingColor(0, 0, 0); // Preto para texto
+                contentStream.setNonStrokingColor(java.awt.Color.BLACK); // Preto para texto
                 contentStream.setFont(textFont, textFontSize);
                 contentStream.beginText();
                 contentStream.newLineAtOffset(50, y);

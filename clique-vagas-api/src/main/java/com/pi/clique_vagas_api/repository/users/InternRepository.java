@@ -12,4 +12,6 @@ import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 public interface InternRepository extends JpaRepository<InternModel, Long> {
 
     Optional<InternModel> findByUserId(UserModel user);
+
+    Optional<InternModel> findByCpf(String cpf);
 }

@@ -52,10 +52,6 @@ public class UserModel implements UserDetails {
     @NotNull
     private UserRole role;
 
-    @Column(name = "cpf", length = 14, unique = true)
-    @NotNull
-    private String cpf;
-
     @Column(name = "phone", length = 20)
     @NotNull
     private String phone;

@@ -42,6 +42,10 @@ public class InternModel {
     @JoinColumn(name = "user_id")
     private UserModel userId;
 
+    @Column(name = "cpf", length = 14, unique = true)
+    @NotNull
+    private String cpf;
+
     @Column(name = "date_of_birth", length = 10)
     @NotNull
     private Date dateOfBirth;
