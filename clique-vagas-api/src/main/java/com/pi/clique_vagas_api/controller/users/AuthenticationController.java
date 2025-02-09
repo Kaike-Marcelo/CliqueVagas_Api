@@ -1,5 +1,7 @@
 package com.pi.clique_vagas_api.controller.users;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pi.clique_vagas_api.infra.security.TokenBlacklistService;
@@ -18,6 +21,7 @@ import com.pi.clique_vagas_api.repository.users.UserRepository;
 import com.pi.clique_vagas_api.resources.dto.authentication.AuthenticationDto;
 import com.pi.clique_vagas_api.resources.dto.authentication.LoginResponseDto;
 import com.pi.clique_vagas_api.resources.dto.user.PostUserDto;
+import com.pi.clique_vagas_api.service.PasswordResetService;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +42,9 @@ public class AuthenticationController {
 
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
+
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid AuthenticationDto data) {
@@ -89,5 +96,21 @@ public class AuthenticationController {
             return ResponseEntity.ok(tokenService.getRoleFromToken(token));
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/request-password-reset")
+    public ResponseEntity<?> requestPasswordReset(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        passwordResetService.requestPasswordReset(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(
+            @RequestParam String token,
+            @RequestBody Map<String, String> request) {
+        String newPassword = request.get("newPassword");
+        passwordResetService.resetPassword(token, newPassword);
+        return ResponseEntity.ok().build();
     }
 }
