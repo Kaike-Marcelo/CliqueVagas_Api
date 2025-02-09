@@ -9,7 +9,7 @@ import com.pi.clique_vagas_api.model.AddressModel;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.AddressUserRepository;
 import com.pi.clique_vagas_api.resources.dto.address.PostAddressDto;
-import com.pi.clique_vagas_api.resources.dto.address.AddressWithIdDto;
+import com.pi.clique_vagas_api.resources.dto.address.GetAddressDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 @Service
@@ -47,9 +47,9 @@ public class AddressService {
         return addressRepository.findByUser(user);
     }
 
-    public AddressWithIdDto getAddressDtoByUserId(UserModel user) {
+    public GetAddressDto getAddressDtoByUserId(UserModel user) {
         var address = addressRepository.findByUser(user);
-        return new AddressWithIdDto(
+        return new GetAddressDto(
                 address.getId(),
                 address.getCep(),
                 address.getStreet(),

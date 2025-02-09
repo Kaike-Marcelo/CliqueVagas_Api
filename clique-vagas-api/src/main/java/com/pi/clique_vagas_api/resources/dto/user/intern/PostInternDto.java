@@ -2,12 +2,14 @@ package com.pi.clique_vagas_api.resources.dto.user.intern;
 
 import java.sql.Date;
 
+import jakarta.validation.constraints.NotNull;
+
 public record PostInternDto(
-                Date dateOfBirth,
-                String sex,
-                String cpf,
-                String educationalInstitution,
-                String areaOfInterest,
-                String yearOfEntry,
-                Date expectedGraduationDate) {
+        @NotNull Date dateOfBirth,
+        @NotNull String sex,
+        @NotNull String cpf,
+        @NotNull String educationalInstitution,
+        @NotNull String areaOfInterest,
+        @NotNull String yearOfEntry,
+        @NotNull Date expectedGraduationDate) {
 }

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
-import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
+import com.pi.clique_vagas_api.resources.dto.user.company.CompanyDto;
 import com.pi.clique_vagas_api.resources.dto.user.company.CreateCompanyDto;
-import com.pi.clique_vagas_api.resources.enums.UserRole;
 import com.pi.clique_vagas_api.service.users.typeUsers.CompanyService;
+
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/company")
@@ -27,17 +27,14 @@ public class CompanyController {
     private CompanyService companyService;
 
     @PostMapping
+    @RolesAllowed("COMPANY")
     public ResponseEntity<Long> createCompany(@RequestBody CreateCompanyDto body) {
-
-        if (body.getUser().role() != UserRole.COMPANY)
-            throw new EventNotFoundException("User is not a company");
         var company = companyService.createCompany(body);
-
         return ResponseEntity.ok(company.getId());
     }
 
     @GetMapping
-    public ResponseEntity<List<CompanyModel>> getAllCompanies() {
+    public ResponseEntity<List<CompanyDto>> getAllCompanies() {
         var companies = companyService.getAllCompany();
         return ResponseEntity.ok(companies);
     }

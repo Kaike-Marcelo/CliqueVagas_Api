@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
-import com.pi.clique_vagas_api.resources.dto.user.GetDataUserGeneric;
+import com.pi.clique_vagas_api.resources.dto.user.GetUserWithAddressDto;
 import com.pi.clique_vagas_api.resources.enums.UserRole;
 
 @Service
@@ -17,7 +17,7 @@ public class ProfileService {
     @Autowired
     private CompanyProfileService companyProfileService;
 
-    public GetDataUserGeneric getUserProfileByRole(UserModel user) {
+    public GetUserWithAddressDto getUserProfileByRole(UserModel user) {
         if (user.getRole() == UserRole.INTERN) {
             return internProfileService.getDataByIdUser(user);
         } else if (user.getRole() == UserRole.COMPANY) {

@@ -11,6 +11,7 @@ import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.repository.users.InternRepository;
 import com.pi.clique_vagas_api.resources.dto.user.intern.CreateInternDto;
+import com.pi.clique_vagas_api.resources.dto.user.intern.InternDto;
 import com.pi.clique_vagas_api.resources.dto.user.intern.PostInternDto;
 import com.pi.clique_vagas_api.service.AddressService;
 import com.pi.clique_vagas_api.service.users.UserService;
@@ -53,8 +54,11 @@ public class InternService {
         return internRepository.save(internModel);
     }
 
-    public List<InternModel> getAllInterns() {
-        return internRepository.findAll();
+    @Transactional
+    public List<InternDto> getAllInterns() {
+        return internRepository.findAll().stream().map(
+                intern -> getObjInternDto(intern))
+                .toList();
     }
 
     public InternModel getInternById(Long id) {
@@ -62,13 +66,24 @@ public class InternService {
                 .orElseThrow(() -> new EventNotFoundException("Intern not found with ID: " + id));
     }
 
+    @Transactional
+    public InternDto getInternByEmailDto(String email) {
+        var user = userService.findByEmail(email);
+        var intern = getInternByUser(user);
+        return getObjInternDto(intern);
+    }
+
+    @Transactional
     public InternModel getInternByUser(UserModel user) {
         return internRepository.findByUserId(user)
                 .orElseThrow(() -> new EventNotFoundException("Intern not found"));
     }
 
-    public InternModel updateIntern(Long id, PostInternDto body) {
-        var intern = getInternById(id);
+    @Transactional
+    public InternModel updateIntern(String email, PostInternDto body) {
+
+        var user = userService.findByEmail(email);
+        var intern = getInternByUser(user);
 
         intern.setCpf(body.cpf());
         intern.setDateOfBirth(body.dateOfBirth());
@@ -82,11 +97,22 @@ public class InternService {
         return internRepository.save(intern);
     }
 
+    @Transactional
     public void deleteIntern(String username) {
         var user = userService.findByEmail(username);
-        if (user == null) {
-            throw new EventNotFoundException("User not found");
-        }
         internRepository.deleteByUserId(user);
+    }
+
+    public InternDto getObjInternDto(InternModel intern) {
+        return new InternDto(
+                intern.getId(),
+                userService.getObjUserDto(intern.getUserId()),
+                intern.getCpf(),
+                intern.getDateOfBirth(),
+                intern.getSex(),
+                intern.getEducationalInstitution(),
+                intern.getAreaOfInterest(),
+                intern.getYearOfEntry(),
+                intern.getExpectedGraduationDate());
     }
 }

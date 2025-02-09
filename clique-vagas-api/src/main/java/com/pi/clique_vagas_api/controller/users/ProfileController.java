@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pi.clique_vagas_api.resources.dto.user.GetDataUserGeneric;
+import com.pi.clique_vagas_api.resources.dto.user.GetUserWithAddressDto;
 import com.pi.clique_vagas_api.service.users.UserService;
 import com.pi.clique_vagas_api.service.users.profile.ProfileService;
 
@@ -27,7 +27,7 @@ public class ProfileController {
 
     @GetMapping
     @RolesAllowed({ "INTERN", "COMPANY" })
-    public ResponseEntity<GetDataUserGeneric> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<GetUserWithAddressDto> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
 
         var user = userService.findByEmail(userDetails.getUsername());
         if (user == null) {
@@ -41,7 +41,7 @@ public class ProfileController {
 
     @GetMapping("/{email}")
     @RolesAllowed({ "COMPANY" })
-    public ResponseEntity<GetDataUserGeneric> getProfileUser(@PathVariable String email) {
+    public ResponseEntity<GetUserWithAddressDto> getProfileUser(@PathVariable String email) {
 
         var user = userService.findByEmail(email);
         if (user == null) {

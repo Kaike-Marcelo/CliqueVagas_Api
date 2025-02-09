@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pi.clique_vagas_api.model.users.UserModel;
+import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.resources.dto.user.company.PostCompanyDto;
 import com.pi.clique_vagas_api.resources.dto.user.company.CompanyProfileDto;
 import com.pi.clique_vagas_api.service.AddressService;
@@ -25,12 +26,7 @@ public class CompanyProfileService {
         var company = companyService.getCompanyByUser(user);
         var address = addressService.getAddressDtoByUserId(user);
 
-        PostCompanyDto companyDto = new PostCompanyDto(
-                company.getCompanyName(),
-                company.getCnpj(),
-                company.getTelephoneResponsible(),
-                company.getSectorOfOperation(),
-                company.getWebsiteLink());
+        var companyDto = getObjCompanyDto(company);
 
         CompanyProfileDto companyProfile = new CompanyProfileDto();
         companyProfile.setUser(user);
@@ -38,6 +34,15 @@ public class CompanyProfileService {
         companyProfile.setCompany(companyDto);
 
         return companyProfile;
+    }
+
+    public PostCompanyDto getObjCompanyDto(CompanyModel company) {
+        return new PostCompanyDto(
+                company.getCompanyName(),
+                company.getCnpj(),
+                company.getTelephoneResponsible(),
+                company.getSectorOfOperation(),
+                company.getWebsiteLink());
     }
 
 }

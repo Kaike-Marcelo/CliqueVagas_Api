@@ -13,6 +13,7 @@ import com.pi.clique_vagas_api.repository.users.CompanyRepository;
 import com.pi.clique_vagas_api.resources.dto.user.company.PostCompanyDto;
 import com.pi.clique_vagas_api.service.AddressService;
 import com.pi.clique_vagas_api.service.users.UserService;
+import com.pi.clique_vagas_api.resources.dto.user.company.CompanyDto;
 import com.pi.clique_vagas_api.resources.dto.user.company.CreateCompanyDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
@@ -52,14 +53,23 @@ public class CompanyService {
     }
 
     @Transactional
-    public List<CompanyModel> getAllCompany() {
-        return companyRepository.findAll();
+    public List<CompanyDto> getAllCompany() {
+        return companyRepository.findAll().stream().map(
+                company -> getObjCompanyDto(company))
+                .toList();
     }
 
     @Transactional
     public CompanyModel getCompanyById(Long id) {
         return companyRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Company not found"));
+    }
+
+    @Transactional
+    public CompanyDto getCompanyByEmailDto(String email) {
+        var user = userService.findByEmail(email);
+        var intern = getCompanyByUser(user);
+        return getObjCompanyDto(intern);
     }
 
     @Transactional
@@ -85,8 +95,17 @@ public class CompanyService {
     @Transactional
     public void deleteCompany(String username) {
         var user = userService.findByEmail(username);
-        if (user == null)
-            throw new EventNotFoundException("User not found");
         companyRepository.deleteByUserId(user);
+    }
+
+    public CompanyDto getObjCompanyDto(CompanyModel company) {
+        return new CompanyDto(
+                company.getId(),
+                userService.getObjUserDto(company.getUserId()),
+                company.getCompanyName(),
+                company.getCnpj(),
+                company.getTelephoneResponsible(),
+                company.getSectorOfOperation(),
+                company.getWebsiteLink());
     }
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserWithAddress {
-    private PostUserDto user;
+public class GetDataUserGenericDto {
     private PostAddressDto address;
+    private PostUserDto user;
 }

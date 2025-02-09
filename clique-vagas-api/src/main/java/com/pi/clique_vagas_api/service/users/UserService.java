@@ -72,17 +72,7 @@ public class UserService {
 
     public UserDto getUserByIdDto(Long userId) {
         var user = getUserById(userId);
-
-        return new UserDto(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                getPhotoProfileByFileName(user.getUrlImageProfile()),
-                user.getRole(),
-                user.getPhone(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getDescription());
+        return getObjUserDto(user);
     }
 
     public byte[] getPhotoProfileByFileName(String filename) {
@@ -94,7 +84,6 @@ public class UserService {
 
     public byte[] getPhotoProfileByEmail(String email) {
         var user = findByEmail(email);
-
         if (user == null)
             throw new EventNotFoundException("User not found with email: " + email);
 
@@ -106,21 +95,20 @@ public class UserService {
     }
 
     public UserModel findByEmail(String email) {
-        return (UserModel) userRepository.findByEmail(email);
+        UserModel user = (UserModel) userRepository.findByEmail(email);
+        if (user == null)
+            throw new EventNotFoundException("User not found with email: " + email);
+        return user;
+    }
+
+    public UserDto findByEmailDto(String email) {
+        UserModel user = findByEmail(email);
+        return getObjUserDto(user);
     }
 
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new UserDto(
-                        user.getUserId(),
-                        user.getFirstName(),
-                        user.getLastName(),
-                        getPhotoProfileByFileName(user.getUrlImageProfile()),
-                        user.getRole(),
-                        user.getPhone(),
-                        user.getEmail(),
-                        user.getPassword(),
-                        user.getDescription()))
+                .map(user -> getObjUserDto(user))
                 .toList();
     }
 
@@ -165,5 +153,18 @@ public class UserService {
             user.setUrlImageProfile(null);
             userRepository.save(user);
         }
+    }
+
+    public UserDto getObjUserDto(UserModel user) {
+        return new UserDto(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                getPhotoProfileByFileName(user.getUrlImageProfile()),
+                user.getRole(),
+                user.getPhone(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getDescription());
     }
 }
