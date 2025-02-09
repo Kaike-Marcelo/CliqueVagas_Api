@@ -1,6 +1,6 @@
 package com.pi.clique_vagas_api.resources.dto.address;
 
-public record AddressDto(
+public record PostAddressDto(
                 String cep,
                 String street,
                 String number,

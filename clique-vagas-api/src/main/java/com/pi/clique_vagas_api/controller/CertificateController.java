@@ -43,7 +43,7 @@ public class CertificateController {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         UserModel user = userService.findByEmail(userDetails.getUsername());
-        InternModel intern = internService.getInternByIdUser(user);
+        InternModel intern = internService.getInternByUser(user);
         CertificateModel savedCertificate = certificateService.save(certificateDto, intern);
         return ResponseEntity.ok(savedCertificate.getId());
     }
@@ -53,7 +53,7 @@ public class CertificateController {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = userService.findByEmail(userDetails.getUsername());
-        var intern = internService.getInternByIdUser(user);
+        var intern = internService.getInternByUser(user);
         var certificate = certificateService.getCertificatesByInternId(intern);
         return ResponseEntity.ok(certificate);
     }
@@ -63,7 +63,7 @@ public class CertificateController {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = userService.findByEmail(userDetails.getUsername());
-        var intern = internService.getInternByIdUser(user);
+        var intern = internService.getInternByUser(user);
 
         certificateService.deleteCertificate(certificateId, intern);
         return ResponseEntity.noContent().build();

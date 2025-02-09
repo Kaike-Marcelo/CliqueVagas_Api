@@ -8,8 +8,8 @@ public record UserDto(
                 String lastName,
                 byte[] urlImageProfile,
                 UserRole role,
-                String cpf,
                 String phone,
                 String email,
-                String password) {
+                String password,
+                String description) {
 }

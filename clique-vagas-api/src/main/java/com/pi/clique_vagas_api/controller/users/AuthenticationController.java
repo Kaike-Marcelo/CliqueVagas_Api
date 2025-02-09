@@ -71,6 +71,7 @@ public class AuthenticationController {
                 data.phone(),
                 data.email(),
                 encryptedPassword,
+                null,
                 DateUtils.nowInZone(),
                 null);
         this.userRepository.save(user);

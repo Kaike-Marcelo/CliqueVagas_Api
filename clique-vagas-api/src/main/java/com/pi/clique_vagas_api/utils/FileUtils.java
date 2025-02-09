@@ -66,6 +66,9 @@ public class FileUtils {
 
     public static byte[] loadFileFromPath(String filePath) {
         try {
+            if (filePath == null || filePath.isEmpty())
+                return null;
+
             Path path = Paths.get(filePath);
             return Files.readAllBytes(path);
         } catch (IOException e) {

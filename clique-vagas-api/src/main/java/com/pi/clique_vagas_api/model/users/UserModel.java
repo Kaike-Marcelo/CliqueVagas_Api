@@ -64,6 +64,9 @@ public class UserModel implements UserDetails {
     @NotNull
     private String password;
 
+    @Column(name = "description", length = 255)
+    private String description;
+
     @CreationTimestamp
     private ZonedDateTime createdAt;
 

@@ -1,6 +1,5 @@
 package com.pi.clique_vagas_api.controller.users;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.resources.dto.user.PostUserDto;
+import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 import com.pi.clique_vagas_api.service.users.UserService;
 
 @RestController
@@ -29,11 +28,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserModel> createUser(@RequestBody PostUserDto body) {
-        var userId = userService.createUser(body);
-        return ResponseEntity.created(URI.create("/user/" + userId.toString())).build();
-    }
+    // @PostMapping
+    // public ResponseEntity<UserModel> createUser(@RequestBody PostUserDto body) {
+    // var userId = userService.createUser(body);
+    // return ResponseEntity.created(URI.create("/user/" +
+    // userId.toString())).build();
+    // }
 
     @PostMapping("/photo")
     public ResponseEntity<String> savePhotoProfile(@AuthenticationPrincipal UserDetails userDetails,
@@ -45,8 +45,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserModel> getUserById(@PathVariable("id") Long userId) {
-        var user = userService.getUserById(userId);
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId) {
+        var user = userService.getUserByIdDto(userId);
         if (user != null) {
             return ResponseEntity.ok(user);
         }
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserModel>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         var users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
@@ -69,8 +69,7 @@ public class UserController {
     public ResponseEntity<Void> updateUserById(@AuthenticationPrincipal UserDetails userDetails,
             @RequestBody PostUserDto body) {
 
-        var user = userService.findByEmail(userDetails.getUsername());
-        userService.updateUserById(user, body);
+        userService.updateUserById(userDetails.getUsername(), body);
         return ResponseEntity.noContent().build();
     }
 

@@ -6,9 +6,9 @@ public record PostUserDto(
         String firstName,
         String lastName,
         UserRole role,
-        String cpf,
         String phone,
         String email,
-        String password) {
+        String password,
+        String description) {
 
 }

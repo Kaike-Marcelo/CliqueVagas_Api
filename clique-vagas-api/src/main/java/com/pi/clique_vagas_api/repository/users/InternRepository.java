@@ -14,4 +14,6 @@ public interface InternRepository extends JpaRepository<InternModel, Long> {
     Optional<InternModel> findByUserId(UserModel user);
 
     Optional<InternModel> findByCpf(String cpf);
+
+    Boolean deleteByUserId(UserModel user);
 }

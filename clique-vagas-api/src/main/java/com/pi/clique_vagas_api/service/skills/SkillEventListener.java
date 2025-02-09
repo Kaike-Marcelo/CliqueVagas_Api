@@ -47,7 +47,7 @@ public class SkillEventListener {
 
         for (InscriptionsJobPostingModel inscricao : inscricoes) {
 
-            var Intern = internService.getInternByIdUser(inscricao.getUserId());
+            var Intern = internService.getInternByUser(inscricao.getUserId());
 
             List<Skill_Intern_Model> skillsEstagiario = skillInternService
                     .getSkillsFromInternByUserId(Intern);

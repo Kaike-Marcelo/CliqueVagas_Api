@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InternProfileDto extends GetDataUserGeneric {
-    private InternDto intern;
+    private PostInternDto intern;
     private List<Skill_Intermediate_WithIdDto> skillIntern;
     private List<CertificateWithIdDto> certificates;
 }

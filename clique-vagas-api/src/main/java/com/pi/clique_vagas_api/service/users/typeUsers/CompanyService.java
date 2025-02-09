@@ -10,7 +10,10 @@ import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.repository.users.CompanyRepository;
-import com.pi.clique_vagas_api.resources.dto.user.company.CompanyDto;
+import com.pi.clique_vagas_api.resources.dto.user.company.PostCompanyDto;
+import com.pi.clique_vagas_api.service.AddressService;
+import com.pi.clique_vagas_api.service.users.UserService;
+import com.pi.clique_vagas_api.resources.dto.user.company.CreateCompanyDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 @Service
@@ -19,11 +22,25 @@ public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AddressService addressService;
+
     @Transactional
-    public CompanyModel createCompany(CompanyDto company, UserModel userModel) {
+    public CompanyModel createCompany(CreateCompanyDto body) {
+
+        if (companyRepository.findByCnpj(body.getCompany().cnpj()) != null)
+            throw new EventNotFoundException("Company already exists with this CNPJ");
+
+        var user = userService.createUser(body.getUser());
+        addressService.createAddress(body.getAddress(), user);
+        var company = body.getCompany();
+
         var companyModel = new CompanyModel(
                 null,
-                userModel,
+                user,
                 company.companyName(),
                 company.cnpj(),
                 company.telephoneResponsible(),
@@ -31,7 +48,6 @@ public class CompanyService {
                 company.websiteLink(),
                 DateUtils.nowInZone(),
                 null);
-
         return companyRepository.save(companyModel);
     }
 
@@ -53,12 +69,7 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyModel getCompanyByIdUser(UserModel user) {
-        return companyRepository.findByUserId(user).orElseThrow(() -> new EventNotFoundException("Company not found"));
-    }
-
-    @Transactional
-    public void updateCompany(Long id, CompanyDto company) {
+    public CompanyModel updateCompany(Long id, PostCompanyDto company) {
         var companyModel = getCompanyById(id);
 
         companyModel.setCompanyName(company.companyName());
@@ -68,11 +79,14 @@ public class CompanyService {
         companyModel.setWebsiteLink(company.websiteLink());
         companyModel.setUpdatedAt(DateUtils.nowInZone());
 
-        companyRepository.save(companyModel);
+        return companyRepository.save(companyModel);
     }
 
     @Transactional
-    public void deleteCompany(Long id) {
-        companyRepository.deleteById(id);
+    public void deleteCompany(String username) {
+        var user = userService.findByEmail(username);
+        if (user == null)
+            throw new EventNotFoundException("User not found");
+        companyRepository.deleteByUserId(user);
     }
 }

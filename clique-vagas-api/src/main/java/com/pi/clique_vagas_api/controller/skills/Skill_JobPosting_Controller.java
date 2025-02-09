@@ -49,7 +49,7 @@ public class Skill_JobPosting_Controller {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = (UserModel) userService.findByEmail(userDetails.getUsername());
-        var company = companyService.getCompanyByIdUser(user);
+        var company = companyService.getCompanyByUser(user);
         var jobPost = jobPostService.findByIdAndCompanyId(body.getIdJobPost(), company);
         var skill = skillService.getSkillById(body.getIdSkill());
 
@@ -65,7 +65,7 @@ public class Skill_JobPosting_Controller {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = (UserModel) userService.findByEmail(userDetails.getUsername());
-        var company = companyService.getCompanyByIdUser(user);
+        var company = companyService.getCompanyByUser(user);
         var JobPost = jobPostService.findByCompanyId(company);
 
         skillJobPostService.updateSkillPost(body, JobPost);
@@ -78,7 +78,7 @@ public class Skill_JobPosting_Controller {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = (UserModel) userService.findByEmail(userDetails.getUsername());
-        var company = companyService.getCompanyByIdUser(user);
+        var company = companyService.getCompanyByUser(user);
         var JobPost = jobPostService.findByCompanyId(company);
 
         var skillsJobPost = skillJobPostService.getSkillsDtoByPostId(JobPost);

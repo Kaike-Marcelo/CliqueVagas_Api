@@ -1,13 +1,16 @@
 package com.pi.clique_vagas_api.resources.dto.user.intern;
 
-import java.sql.Date;
+import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 
 public record InternDto(
-                Date dateOfBirth,
-                String sex,
-                String cpf,
-                String educationalInstitution,
-                String areaOfInterest,
-                String yearOfEntry,
-                Date expectedGraduationDate) {
+        Long id,
+        UserDto user,
+        String cpf,
+        String dateOfBirth,
+        String sex,
+        String educationalInstitution,
+        String areaOfInterest,
+        String yearOfEntry,
+        String expectedGraduationDate) {
+
 }

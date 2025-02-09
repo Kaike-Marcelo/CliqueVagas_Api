@@ -43,7 +43,7 @@ public class JobPostingController {
             @RequestBody JobPostDto postDto) {
 
         var user = userService.findByEmail(userDetails.getUsername());
-        var company = companyService.getCompanyByIdUser(user);
+        var company = companyService.getCompanyByUser(user);
         var post = jobPostingService.save(postDto, company);
 
         return ResponseEntity.ok(post.getId());
@@ -54,7 +54,7 @@ public class JobPostingController {
             @RequestBody JobPostWithIdDto postDto) {
 
         var user = userService.findByEmail(userDetails.getUsername());
-        var company = companyService.getCompanyByIdUser(user);
+        var company = companyService.getCompanyByUser(user);
         var post = jobPostingService.update(postDto, company);
 
         return ResponseEntity.ok(post.getId());
@@ -63,7 +63,7 @@ public class JobPostingController {
     @GetMapping("company/{email}")
     private ResponseEntity<List<GetJobPostDto>> getJobPosting(@PathVariable("email") String email) {
         var user = userService.findByEmail(email);
-        var company = companyService.getCompanyByIdUser(user);
+        var company = companyService.getCompanyByUser(user);
         var posts = jobPostingService.findAllPostsByIdCompany(company);
         var completePosts = skill_JobPost_Service.findAllCompletePostsByIdPost(posts);
 

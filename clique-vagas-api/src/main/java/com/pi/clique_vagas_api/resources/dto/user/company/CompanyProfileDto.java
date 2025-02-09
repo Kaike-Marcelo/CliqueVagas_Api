@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CompanyProfileDto extends GetDataUserGeneric {
-    private CompanyDto company;
+    private PostCompanyDto company;
 }

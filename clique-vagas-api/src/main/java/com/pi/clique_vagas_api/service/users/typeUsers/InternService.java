@@ -10,7 +10,10 @@ import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.repository.users.InternRepository;
-import com.pi.clique_vagas_api.resources.dto.user.intern.InternDto;
+import com.pi.clique_vagas_api.resources.dto.user.intern.CreateInternDto;
+import com.pi.clique_vagas_api.resources.dto.user.intern.PostInternDto;
+import com.pi.clique_vagas_api.service.AddressService;
+import com.pi.clique_vagas_api.service.users.UserService;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 @Service
@@ -19,31 +22,35 @@ public class InternService {
     @Autowired
     private InternRepository internRepository;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AddressService addressService;
+
     @Transactional
-    public InternModel createIntern(InternDto body, UserModel user) {
+    public InternModel createIntern(CreateInternDto body) {
 
-        if (internRepository.findByCpf(body.cpf()) != null)
-            throw new EventNotFoundException("Intern already exists with CPF: " + body.cpf());
+        if (internRepository.findByCpf(body.getIntern().cpf()) != null)
+            throw new EventNotFoundException("Intern already exists with this CPF");
 
-        try {
-            var internModel = new InternModel(
-                    null,
-                    user,
-                    body.cpf(),
-                    body.dateOfBirth(),
-                    body.sex(),
-                    body.educationalInstitution(),
-                    body.areaOfInterest(),
-                    body.yearOfEntry(),
-                    body.expectedGraduationDate(),
-                    DateUtils.nowInZone(),
-                    null);
+        var user = userService.createUser(body.getUser());
+        addressService.createAddress(body.getAddress(), user);
 
-            return internRepository.save(internModel);
+        var internModel = new InternModel(
+                null,
+                user,
+                body.getIntern().cpf(),
+                body.getIntern().dateOfBirth(),
+                body.getIntern().sex(),
+                body.getIntern().educationalInstitution(),
+                body.getIntern().areaOfInterest(),
+                body.getIntern().yearOfEntry(),
+                body.getIntern().expectedGraduationDate(),
+                DateUtils.nowInZone(),
+                null);
 
-        } catch (Exception ex) {
-            throw new EventNotFoundException("Error creating intern: " + ex.getMessage());
-        }
+        return internRepository.save(internModel);
     }
 
     public List<InternModel> getAllInterns() {
@@ -60,11 +67,26 @@ public class InternService {
                 .orElseThrow(() -> new EventNotFoundException("Intern not found"));
     }
 
-    public InternModel getInternByIdUser(UserModel user) {
-        return internRepository.findByUserId(user).orElseThrow(() -> new EventNotFoundException("Intern not found"));
+    public InternModel updateIntern(Long id, PostInternDto body) {
+        var intern = getInternById(id);
+
+        intern.setCpf(body.cpf());
+        intern.setDateOfBirth(body.dateOfBirth());
+        intern.setSex(body.sex());
+        intern.setEducationalInstitution(body.educationalInstitution());
+        intern.setAreaOfInterest(body.areaOfInterest());
+        intern.setYearOfEntry(body.yearOfEntry());
+        intern.setExpectedGraduationDate(body.expectedGraduationDate());
+        intern.setUpdatedAt(DateUtils.nowInZone());
+
+        return internRepository.save(intern);
     }
 
-    public void deleteIntern(Long id) {
-        internRepository.deleteById(id);
+    public void deleteIntern(String username) {
+        var user = userService.findByEmail(username);
+        if (user == null) {
+            throw new EventNotFoundException("User not found");
+        }
+        internRepository.deleteByUserId(user);
     }
 }

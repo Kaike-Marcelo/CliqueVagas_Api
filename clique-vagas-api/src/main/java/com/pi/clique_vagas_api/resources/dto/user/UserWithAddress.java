@@ -1,6 +1,6 @@
 package com.pi.clique_vagas_api.resources.dto.user;
 
-import com.pi.clique_vagas_api.resources.dto.address.AddressDto;
+import com.pi.clique_vagas_api.resources.dto.address.PostAddressDto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class UserWithAddress {
     private PostUserDto user;
-    private AddressDto address;
+    private PostAddressDto address;
 }

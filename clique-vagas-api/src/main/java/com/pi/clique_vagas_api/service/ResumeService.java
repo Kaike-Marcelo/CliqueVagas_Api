@@ -36,7 +36,7 @@ public class ResumeService {
     private CertificateService certificateService;
 
     public byte[] generateResumePdf(UserModel user) {
-        InternModel intern = internService.getInternByIdUser(user);
+        InternModel intern = internService.getInternByUser(user);
         ResumeDto resumeData = prepareResumeData(intern);
         return createPdf(resumeData);
     }

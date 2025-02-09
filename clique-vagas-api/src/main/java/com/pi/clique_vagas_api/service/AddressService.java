@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.pi.clique_vagas_api.model.AddressModel;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.AddressUserRepository;
-import com.pi.clique_vagas_api.resources.dto.address.AddressDto;
+import com.pi.clique_vagas_api.resources.dto.address.PostAddressDto;
 import com.pi.clique_vagas_api.resources.dto.address.AddressWithIdDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
@@ -18,7 +18,7 @@ public class AddressService {
     @Autowired
     private AddressUserRepository addressRepository;
 
-    public AddressModel createAddress(AddressDto addressDto, UserModel user) {
+    public AddressModel createAddress(PostAddressDto addressDto, UserModel user) {
         var address = new AddressModel(
                 null,
                 user,
@@ -59,7 +59,7 @@ public class AddressService {
                 address.getState());
     }
 
-    public AddressModel updateAddress(Long addressId, AddressDto addressDto) {
+    public AddressModel updateAddress(Long addressId, PostAddressDto addressDto) {
 
         var addressModel = addressRepository.findById(addressId);
 

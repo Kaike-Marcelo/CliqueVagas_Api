@@ -45,7 +45,7 @@ public class Skill_Intern_Controller {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = (UserModel) userService.findByEmail(userDetails.getUsername());
-        var intern = internService.getInternByIdUser(user);
+        var intern = internService.getInternByUser(user);
         var skill = skillService.getSkillById(body.getIdSkill());
 
         var skillIntern = skillInternService.createSkillIntern(skill, intern, body);
@@ -58,7 +58,7 @@ public class Skill_Intern_Controller {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = (UserModel) userService.findByEmail(userDetails.getUsername());
-        var intern = internService.getInternByIdUser(user);
+        var intern = internService.getInternByUser(user);
 
         skillInternService.updateSkillIntern(body, intern);
 
@@ -70,7 +70,7 @@ public class Skill_Intern_Controller {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         var user = (UserModel) userService.findByEmail(userDetails.getUsername());
-        var intern = internService.getInternByIdUser(user);
+        var intern = internService.getInternByUser(user);
 
         var skillsIntern = skillInternService.getSkillsDtoByInternId(intern);
         return ResponseEntity.ok(skillsIntern);

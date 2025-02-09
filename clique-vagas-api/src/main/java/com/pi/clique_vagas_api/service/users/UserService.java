@@ -12,6 +12,7 @@ import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.users.UserRepository;
 import com.pi.clique_vagas_api.resources.dto.user.PostUserDto;
+import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 import com.pi.clique_vagas_api.utils.DateUtils;
 import com.pi.clique_vagas_api.utils.FileUtils;
 
@@ -38,18 +39,18 @@ public class UserService {
                 data.phone(),
                 data.email(),
                 encryptedPassword,
+                null,
                 DateUtils.nowInZone(),
                 null);
         return userRepository.save(user);
-
     }
 
     public UserModel savePhotoProfile(MultipartFile file, Long userId) {
 
-        UserModel user = getUserById(userId);
+        var user = getUserById(userId);
+        var existingImageUrl = user.getUrlImageProfile();
 
-        String existingImageUrl = user.getUrlImageProfile();
-        if (existingImageUrl != null && !existingImageUrl.isEmpty()) {
+        if (existingImageUrl != null) {
             FileUtils.deleteFile(existingImageUrl);
         }
 
@@ -57,16 +58,31 @@ public class UserService {
             throw new IllegalArgumentException("File must be a image.");
 
         var url = FileUtils.saveFileInDirectory(file, userId, PROFILE_DIR, "profile");
-
         user.setUrlImageProfile(url);
+        user.setUpdatedAt(DateUtils.nowInZone());
 
         return userRepository.save(user);
     }
 
-    public UserModel getUserById(Long userId) {
+    private UserModel getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EventNotFoundException("User not found with ID: " +
                         userId));
+    }
+
+    public UserDto getUserByIdDto(Long userId) {
+        var user = getUserById(userId);
+
+        return new UserDto(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                getPhotoProfileByFileName(user.getUrlImageProfile()),
+                user.getRole(),
+                user.getPhone(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getDescription());
     }
 
     public byte[] getPhotoProfileByFileName(String filename) {
@@ -93,14 +109,27 @@ public class UserService {
         return (UserModel) userRepository.findByEmail(email);
     }
 
-    public List<UserModel> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserDto(
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        getPhotoProfileByFileName(user.getUrlImageProfile()),
+                        user.getRole(),
+                        user.getPhone(),
+                        user.getEmail(),
+                        user.getPassword(),
+                        user.getDescription()))
+                .toList();
     }
 
-    public UserModel updateUserById(UserModel user, PostUserDto userDto) {
+    public UserModel updateUserById(String email, PostUserDto userDto) {
+
+        UserModel user = findByEmail(email);
 
         if (user == null)
-            throw new EventNotFoundException("User not found with ID: ");
+            throw new EventNotFoundException("User not found");
 
         if (userDto.firstName() != null)
             user.setFirstName(userDto.firstName());
@@ -112,6 +141,8 @@ public class UserService {
             user.setEmail(userDto.email());
         if (userDto.password() != null)
             user.setPassword(userDto.password());
+        if (userDto.description() != null)
+            user.setDescription(userDto.description());
 
         user.setUpdatedAt(DateUtils.nowInZone());
 

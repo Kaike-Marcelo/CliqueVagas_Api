@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
 import com.pi.clique_vagas_api.model.users.UserModel;
-import com.pi.clique_vagas_api.resources.dto.user.intern.InternDto;
+import com.pi.clique_vagas_api.resources.dto.user.intern.PostInternDto;
 import com.pi.clique_vagas_api.resources.dto.user.intern.InternProfileDto;
 import com.pi.clique_vagas_api.resources.enums.UserRole;
 import com.pi.clique_vagas_api.service.AddressService;
@@ -35,12 +35,12 @@ public class InternProfileService {
         if (user.getRole() != UserRole.INTERN)
             throw new EventNotFoundException("User is not an intern");
 
-        var intern = internService.getInternByIdUser(user);
+        var intern = internService.getInternByUser(user);
         var address = addressService.getAddressDtoByUserId(user);
         var skills = skillInternService.getSkillsDtoByInternId(intern);
         var certificates = certificateService.getCertificatesByInternId(intern);
 
-        InternDto internDto = new InternDto(
+        PostInternDto internDto = new PostInternDto(
                 intern.getDateOfBirth(),
                 intern.getCpf(),
                 intern.getSex(),

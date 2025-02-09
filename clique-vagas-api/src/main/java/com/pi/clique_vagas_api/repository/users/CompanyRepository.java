@@ -11,4 +11,8 @@ public interface CompanyRepository extends JpaRepository<CompanyModel, Long> {
 
     Optional<CompanyModel> findByUserId(UserModel user);
 
+    CompanyModel findByCnpj(String cnpj);
+
+    Boolean deleteByUserId(UserModel user);
+
 }

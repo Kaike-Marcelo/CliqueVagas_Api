@@ -9,7 +9,4 @@ import com.pi.clique_vagas_api.model.users.UserModel;
 @Repository
 public interface UserRepository extends JpaRepository<UserModel, Long> {
     UserDetails findByEmail(String email);
-
-    UserModel findByCpf(String cpf);
-
 }
