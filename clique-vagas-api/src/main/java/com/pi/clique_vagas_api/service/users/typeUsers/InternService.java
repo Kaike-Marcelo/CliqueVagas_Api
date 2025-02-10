@@ -1,6 +1,7 @@
 package com.pi.clique_vagas_api.service.users.typeUsers;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,10 @@ public class InternService {
     @Transactional
     public InternModel createIntern(CreateInternDto body) {
 
-        if (internRepository.findByCpf(body.getIntern().cpf()) != null)
+        Logger.getGlobal().info("Creating intern" + internRepository.findByCpf(body.getIntern().cpf()));
+        Logger.getGlobal().info("Creating intern" + body.getIntern().cpf());
+
+        if (!internRepository.findByCpf(body.getIntern().cpf()).isEmpty())
             throw new EventNotFoundException("Intern already exists with this CPF");
 
         var user = userService.createUser(body.getUser());
