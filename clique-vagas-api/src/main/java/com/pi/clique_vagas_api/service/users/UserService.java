@@ -160,7 +160,7 @@ public class UserService {
                 user.getUserId(),
                 user.getFirstName(),
                 user.getLastName(),
-                getPhotoProfileByFileName(user.getUrlImageProfile()),
+                FileUtils.loadFileFromPath(user.getUrlImageProfile()),
                 user.getRole(),
                 user.getPhone(),
                 user.getEmail(),

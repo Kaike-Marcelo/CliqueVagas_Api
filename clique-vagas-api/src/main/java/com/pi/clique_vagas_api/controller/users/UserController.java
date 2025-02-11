@@ -53,7 +53,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         var users = userService.getAllUsers();
         return ResponseEntity.ok(users);
