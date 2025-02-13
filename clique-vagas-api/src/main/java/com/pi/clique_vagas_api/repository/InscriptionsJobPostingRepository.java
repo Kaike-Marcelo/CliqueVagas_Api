@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.pi.clique_vagas_api.model.InscriptionsJobPostingModel;
-import com.pi.clique_vagas_api.model.JobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.InscriptionsJobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.resources.enums.Status;
 

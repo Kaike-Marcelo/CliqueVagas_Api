@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pi.clique_vagas_api.model.JobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.repository.JobPostingRepository;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
+import com.pi.clique_vagas_api.resources.enums.Status;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 @Service
@@ -50,6 +51,10 @@ public class JobPostingService {
         return jobPostingRepository.findAllByCompany(company);
     }
 
+    public List<JobPostingModel> findAllActivePosts() {
+        return jobPostingRepository.findAllByJobPostingStatusNot(Status.INACTIVE);
+    }
+
     public JobPostingModel update(JobPostWithIdDto post, CompanyModel company) {
 
         JobPostingModel jobPosting = findByIdAndCompanyId(post.id(), company);
@@ -69,7 +74,8 @@ public class JobPostingService {
         return jobPostingRepository.save(jobPosting);
     }
 
-    public void delete(JobPostingModel jobPosting) {
+    public void delete(Long idPost, CompanyModel companyModel) {
+        JobPostingModel jobPosting = findByIdAndCompanyId(idPost, companyModel);
         jobPostingRepository.delete(jobPosting);
     }
 }

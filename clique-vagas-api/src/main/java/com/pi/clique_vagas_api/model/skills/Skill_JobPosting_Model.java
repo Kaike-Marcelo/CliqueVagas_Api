@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.pi.clique_vagas_api.model.JobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.resources.enums.skill.ProficiencyLevel;
 
 import jakarta.persistence.Column;

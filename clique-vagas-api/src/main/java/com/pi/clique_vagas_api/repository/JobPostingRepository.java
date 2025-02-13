@@ -6,8 +6,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.pi.clique_vagas_api.model.JobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
+import com.pi.clique_vagas_api.resources.enums.Status;
 
 @Repository
 public interface JobPostingRepository extends JpaRepository<JobPostingModel, Long> {
@@ -17,5 +18,7 @@ public interface JobPostingRepository extends JpaRepository<JobPostingModel, Lon
     Optional<JobPostingModel> findByCompany(CompanyModel companyId);
 
     List<JobPostingModel> findAllByCompany(CompanyModel companyId);
+
+    List<JobPostingModel> findAllByJobPostingStatusNot(Status status);
 
 }

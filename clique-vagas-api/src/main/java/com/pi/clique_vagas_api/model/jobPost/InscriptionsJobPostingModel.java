@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.model;
+package com.pi.clique_vagas_api.model.jobPost;
 
 import java.time.ZonedDateTime;
 

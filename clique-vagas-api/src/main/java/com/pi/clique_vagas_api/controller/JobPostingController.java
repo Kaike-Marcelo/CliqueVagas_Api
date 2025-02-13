@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,7 @@ public class JobPostingController {
     private CompanyService companyService;
 
     @PostMapping
-    private ResponseEntity<Long> saveJobPosting(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<Long> saveJobPosting(@AuthenticationPrincipal UserDetails userDetails,
             @RequestBody JobPostDto postDto) {
 
         var user = userService.findByEmail(userDetails.getUsername());
@@ -50,7 +51,7 @@ public class JobPostingController {
     }
 
     @PutMapping
-    private ResponseEntity<Long> updateJobPosting(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<Long> updateJobPosting(@AuthenticationPrincipal UserDetails userDetails,
             @RequestBody JobPostWithIdDto postDto) {
 
         var user = userService.findByEmail(userDetails.getUsername());
@@ -60,13 +61,23 @@ public class JobPostingController {
         return ResponseEntity.ok(post.getId());
     }
 
+    
+
     @GetMapping("company/{email}")
-    private ResponseEntity<List<GetJobPostDto>> getJobPosting(@PathVariable("email") String email) {
+    public ResponseEntity<List<GetJobPostDto>> getJobPosting(@PathVariable("email") String email) {
         var user = userService.findByEmail(email);
         var company = companyService.getCompanyByUser(user);
         var posts = jobPostingService.findAllPostsByIdCompany(company);
         var completePosts = skill_JobPost_Service.findAllCompletePostsByIdPost(posts);
 
         return ResponseEntity.ok(completePosts);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteJobPosting(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        var user = userService.findByEmail(userDetails.getUsername());
+        var company = companyService.getCompanyByUser(user);
+        jobPostingService.delete(id, company);
+        return ResponseEntity.noContent().build();
     }
 }

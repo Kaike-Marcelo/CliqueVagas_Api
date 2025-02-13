@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.events.JobPostingSkillChangedEvent;
 import com.pi.clique_vagas_api.exceptions.EventNotFoundException;
-import com.pi.clique_vagas_api.model.JobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.skills.SkillModel;
 import com.pi.clique_vagas_api.model.skills.Skill_JobPosting_Model;
 import com.pi.clique_vagas_api.repository.skills.Skill_JobPost_Repository;

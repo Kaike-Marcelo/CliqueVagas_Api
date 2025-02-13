@@ -7,7 +7,7 @@ import org.springframework.context.event.EventListener;
 
 import com.pi.clique_vagas_api.events.InternSkillChangedEvent;
 import com.pi.clique_vagas_api.events.JobPostingSkillChangedEvent;
-import com.pi.clique_vagas_api.model.InscriptionsJobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.InscriptionsJobPostingModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.skills.Skill_JobPosting_Model;
 import com.pi.clique_vagas_api.repository.InscriptionsJobPostingRepository;

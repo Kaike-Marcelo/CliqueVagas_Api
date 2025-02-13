@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pi.clique_vagas_api.model.InscriptionsJobPostingModel;
-import com.pi.clique_vagas_api.model.JobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.InscriptionsJobPostingModel;
+import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.repository.InscriptionsJobPostingRepository;
 import com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost.GetInscriptionJobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost.InscriptionsJobPostDto;
