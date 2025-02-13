@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.controller;
+package com.pi.clique_vagas_api.controller.jobPosting;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

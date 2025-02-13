@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.repository;
+package com.pi.clique_vagas_api.repository.jobPosting;
 
 import java.util.List;
 

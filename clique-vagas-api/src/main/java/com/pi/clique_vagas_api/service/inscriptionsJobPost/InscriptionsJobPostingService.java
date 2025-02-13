@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.model.jobPost.InscriptionsJobPostingModel;
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
-import com.pi.clique_vagas_api.repository.InscriptionsJobPostingRepository;
+import com.pi.clique_vagas_api.repository.jobPosting.InscriptionsJobPostingRepository;
 import com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost.GetInscriptionJobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost.InscriptionsJobPostDto;
 import com.pi.clique_vagas_api.resources.dto.user.GetNameAndEmailUserDto;

@@ -10,7 +10,7 @@ import com.pi.clique_vagas_api.events.JobPostingSkillChangedEvent;
 import com.pi.clique_vagas_api.model.jobPost.InscriptionsJobPostingModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.skills.Skill_JobPosting_Model;
-import com.pi.clique_vagas_api.repository.InscriptionsJobPostingRepository;
+import com.pi.clique_vagas_api.repository.jobPosting.InscriptionsJobPostingRepository;
 import com.pi.clique_vagas_api.resources.enums.Status;
 import com.pi.clique_vagas_api.service.JobPostingService;
 import com.pi.clique_vagas_api.service.inscriptionsJobPost.PontuationService;

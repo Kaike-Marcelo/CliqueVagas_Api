@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
-import com.pi.clique_vagas_api.repository.JobPostingRepository;
+import com.pi.clique_vagas_api.repository.jobPosting.JobPostingRepository;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.enums.Status;
