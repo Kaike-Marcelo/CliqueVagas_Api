@@ -2,8 +2,8 @@ package com.pi.clique_vagas_api.controller.jobPosting;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.users.UserModel;
-import com.pi.clique_vagas_api.service.JobPostingService;
-import com.pi.clique_vagas_api.service.LikeJobPostingService;
+import com.pi.clique_vagas_api.service.jobPost.JobPostingService;
+import com.pi.clique_vagas_api.service.jobPost.LikeJobPostingService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.pi.clique_vagas_api.service;
+package com.pi.clique_vagas_api.service.jobPost;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

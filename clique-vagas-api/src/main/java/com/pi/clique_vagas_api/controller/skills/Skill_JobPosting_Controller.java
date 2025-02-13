@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_WithIdDto;
 import com.pi.clique_vagas_api.resources.dto.skill.jobPost.Skill_JobPost_Dto;
-import com.pi.clique_vagas_api.service.JobPostingService;
+import com.pi.clique_vagas_api.service.jobPost.JobPostingService;
 import com.pi.clique_vagas_api.service.skills.SkillService;
 import com.pi.clique_vagas_api.service.skills.Skill_JobPost_Service;
 import com.pi.clique_vagas_api.service.users.UserService;

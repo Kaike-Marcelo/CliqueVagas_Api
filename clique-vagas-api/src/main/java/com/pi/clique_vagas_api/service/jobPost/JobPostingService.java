@@ -1,16 +1,20 @@
-package com.pi.clique_vagas_api.service;
+package com.pi.clique_vagas_api.service.jobPost;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
+import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.repository.jobPosting.JobPostingRepository;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.enums.Status;
+import com.pi.clique_vagas_api.service.skills.SkillCompatibilityService;
 import com.pi.clique_vagas_api.utils.DateUtils;
 
 @Service
@@ -18,6 +22,9 @@ public class JobPostingService {
 
     @Autowired
     private JobPostingRepository jobPostingRepository;
+
+    @Autowired
+    private SkillCompatibilityService skillCompatibilityService;
 
     public JobPostingModel save(JobPostDto post, CompanyModel company) {
 
@@ -53,6 +60,15 @@ public class JobPostingService {
 
     public List<JobPostingModel> findAllActivePosts() {
         return jobPostingRepository.findAllByJobPostingStatusNot(Status.INACTIVE);
+    }
+
+    public List<JobPostingModel> getJobPostsForIntern(List<Skill_Intern_Model> internSkills) {
+        List<JobPostingModel> activePosts = findAllActivePosts();
+
+        return activePosts.stream()
+                .sorted(Comparator.comparingInt(
+                        post -> -skillCompatibilityService.calculateCompatibilityScore(internSkills, post)))
+                .collect(Collectors.toList());
     }
 
     public JobPostingModel update(JobPostWithIdDto post, CompanyModel company) {

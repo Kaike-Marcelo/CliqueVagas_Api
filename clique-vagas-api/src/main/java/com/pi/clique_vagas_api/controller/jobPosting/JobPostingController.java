@@ -15,13 +15,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
+import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
+import com.pi.clique_vagas_api.model.users.UserModel;
+import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.resources.dto.jobPost.GetJobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
-import com.pi.clique_vagas_api.service.JobPostingService;
+import com.pi.clique_vagas_api.service.jobPost.JobPostingService;
+import com.pi.clique_vagas_api.service.skills.Skill_Intern_Service;
 import com.pi.clique_vagas_api.service.skills.Skill_JobPost_Service;
 import com.pi.clique_vagas_api.service.users.UserService;
 import com.pi.clique_vagas_api.service.users.typeUsers.CompanyService;
+import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
 
 @RestController
 @RequestMapping("/job_posting")
@@ -34,7 +40,13 @@ public class JobPostingController {
     private Skill_JobPost_Service skill_JobPost_Service;
 
     @Autowired
+    private Skill_Intern_Service skill_Intern_Service;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private InternService internService;
 
     @Autowired
     private CompanyService companyService;
@@ -61,7 +73,30 @@ public class JobPostingController {
         return ResponseEntity.ok(post.getId());
     }
 
-    
+    @GetMapping("/public")
+    public ResponseEntity<List<JobPostingModel>> getPublicJobPosts() {
+        List<JobPostingModel> posts = jobPostingService.findAllActivePosts();
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/public/intern")
+    public ResponseEntity<List<JobPostingModel>> getJobPostsForIntern(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        UserModel user = userService.findByEmail(userDetails.getUsername());
+        InternModel intern = internService.getInternByUser(user);
+        List<Skill_Intern_Model> internSkills = skill_Intern_Service.getSkillsFromInternByUserId(intern);
+        List<JobPostingModel> posts = jobPostingService.getJobPostsForIntern(internSkills);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/company")
+    public ResponseEntity<JobPostingModel> getJobPostingById(@AuthenticationPrincipal UserDetails userDetails) {
+        var user = userService.findByEmail(userDetails.getUsername());
+        var company = companyService.getCompanyByUser(user);
+        var post = jobPostingService.findByCompanyId(company);
+        return ResponseEntity.ok(post);
+    }
 
     @GetMapping("company/{email}")
     public ResponseEntity<List<GetJobPostDto>> getJobPosting(@PathVariable("email") String email) {
@@ -74,7 +109,8 @@ public class JobPostingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteJobPosting(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Void> deleteJobPosting(@PathVariable("id") Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
         var user = userService.findByEmail(userDetails.getUsername());
         var company = companyService.getCompanyByUser(user);
         jobPostingService.delete(id, company);

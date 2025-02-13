@@ -8,78 +8,61 @@ import org.springframework.context.event.EventListener;
 import com.pi.clique_vagas_api.events.InternSkillChangedEvent;
 import com.pi.clique_vagas_api.events.JobPostingSkillChangedEvent;
 import com.pi.clique_vagas_api.model.jobPost.InscriptionsJobPostingModel;
-import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
-import com.pi.clique_vagas_api.model.skills.Skill_JobPosting_Model;
 import com.pi.clique_vagas_api.repository.jobPosting.InscriptionsJobPostingRepository;
 import com.pi.clique_vagas_api.resources.enums.Status;
-import com.pi.clique_vagas_api.service.JobPostingService;
-import com.pi.clique_vagas_api.service.inscriptionsJobPost.PontuationService;
+import com.pi.clique_vagas_api.service.jobPost.JobPostingService;
+import com.pi.clique_vagas_api.service.jobPost.inscriptionsJobPost.PontuationService;
 import com.pi.clique_vagas_api.service.users.typeUsers.InternService;
 
 public class SkillEventListener {
 
-    @Autowired
-    private PontuationService pontuationService;
+        @Autowired
+        private PontuationService pontuationService;
 
-    @Autowired
-    private InternService internService;
+        @Autowired
+        private InternService internService;
 
-    @Autowired
-    private JobPostingService jobPostingService;
+        @Autowired
+        private JobPostingService jobPostingService;
 
-    @Autowired
-    private Skill_Intern_Service skillInternService;
+        @Autowired
+        private InscriptionsJobPostingRepository inscriptionsJobPostRepository;
 
-    @Autowired
-    private Skill_JobPost_Service skillJobPostService;
+        @EventListener
+        public void handleSkillVagaAlterada(JobPostingSkillChangedEvent event) {
+                Long jobPostingId = event.getJobPostingId();
 
-    @Autowired
-    private InscriptionsJobPostingRepository inscriptionsJobPostRepository;
+                var jobPost = jobPostingService.findById(jobPostingId);
 
-    @EventListener
-    public void handleSkillVagaAlterada(JobPostingSkillChangedEvent event) {
-        Long jobPostingId = event.getJobPostingId();
+                List<InscriptionsJobPostingModel> inscricoes = inscriptionsJobPostRepository
+                                .findAllByJobPostingId(jobPost);
 
-        var jobPost = jobPostingService.findById(jobPostingId);
+                for (InscriptionsJobPostingModel inscricao : inscricoes) {
 
-        List<InscriptionsJobPostingModel> inscricoes = inscriptionsJobPostRepository
-                .findAllByJobPostingId(jobPost);
-
-        for (InscriptionsJobPostingModel inscricao : inscricoes) {
-
-            var Intern = internService.getInternByUser(inscricao.getUserId());
-
-            List<Skill_Intern_Model> skillsEstagiario = skillInternService
-                    .getSkillsFromInternByUserId(Intern);
-            List<Skill_JobPosting_Model> skillsVaga = skillJobPostService
-                    .getSkillsFromPostByUserId(inscricao.getJobPostingId());
-
-            Double novaPontuacao = pontuationService.calculatePontuation(skillsEstagiario, skillsVaga);
-            inscricao.setPontuation(novaPontuacao);
-            inscriptionsJobPostRepository.save(inscricao);
+                        var intern = internService.getInternByUser(inscricao.getUserId());
+                        Double novaPontuacao = pontuationService.calculatePontuation(intern,
+                                        inscricao.getJobPostingId());
+                        inscricao.setPontuation(novaPontuacao);
+                        inscriptionsJobPostRepository.save(inscricao);
+                }
         }
-    }
 
-    @EventListener
-    public void handleSkillEstagiarioAlterada(InternSkillChangedEvent event) {
-        Long userId = event.getUserId();
+        @EventListener
+        public void handleSkillEstagiarioAlterada(InternSkillChangedEvent event) {
+                Long userId = event.getUserId();
 
-        var intern = internService.getInternById(userId);
+                var intern = internService.getInternById(userId);
 
-        List<InscriptionsJobPostingModel> inscricoes = inscriptionsJobPostRepository
-                .findAllByUserIdAndJobPostingStatus(intern.getUserId(), Status.ACTIVE);
+                List<InscriptionsJobPostingModel> inscricoes = inscriptionsJobPostRepository
+                                .findAllByUserIdAndJobPostingStatus(intern.getUserId(), Status.ACTIVE);
 
-        for (InscriptionsJobPostingModel inscricao : inscricoes) {
+                for (InscriptionsJobPostingModel inscricao : inscricoes) {
 
-            List<Skill_Intern_Model> skillsEstagiario = skillInternService
-                    .getSkillsFromInternByUserId(intern);
-            List<Skill_JobPosting_Model> skillsVaga = skillJobPostService
-                    .getSkillsFromPostByUserId(inscricao.getJobPostingId());
-
-            Double novaPontuacao = pontuationService.calculatePontuation(skillsEstagiario, skillsVaga);
-            inscricao.setPontuation(novaPontuacao);
-            inscriptionsJobPostRepository.save(inscricao);
+                        Double novaPontuacao = pontuationService.calculatePontuation(intern,
+                                        inscricao.getJobPostingId());
+                        inscricao.setPontuation(novaPontuacao);
+                        inscriptionsJobPostRepository.save(inscricao);
+                }
         }
-    }
 
 }
