@@ -3,12 +3,14 @@ package com.pi.clique_vagas_api.service.skills;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.skills.Skill_JobPosting_Model;
 import com.pi.clique_vagas_api.repository.skills.Skill_JobPost_Repository;
 
+@Service
 public class SkillCompatibilityService {
 
     @Autowired

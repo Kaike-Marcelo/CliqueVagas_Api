@@ -16,7 +16,7 @@ import com.pi.clique_vagas_api.resources.enums.Status;
 @Repository
 public interface InscriptionsJobPostingRepository extends JpaRepository<InscriptionsJobPostingModel, Long> {
 
-    Optional<InscriptionsJobPostingModel> findByUserId(UserModel user, JobPostingModel jobPostingModel);
+    Optional<InscriptionsJobPostingModel> findByUserIdAndJobPostingId(UserModel user, JobPostingModel jobPostingModel);
 
     List<InscriptionsJobPostingModel> findAllByJobPostingId(JobPostingModel jobPostingModel);
 

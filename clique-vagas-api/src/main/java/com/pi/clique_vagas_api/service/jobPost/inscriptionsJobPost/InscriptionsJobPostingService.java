@@ -22,7 +22,7 @@ public class InscriptionsJobPostingService {
 
     public InscriptionsJobPostingModel save(JobPostingModel jobPostingModel, UserModel userModel, Double pontuation) {
 
-        if (inscriptionsJobPostRepository.findByUserId(userModel, jobPostingModel).isPresent()) {
+        if (inscriptionsJobPostRepository.findByUserIdAndJobPostingId(userModel, jobPostingModel).isPresent()) {
             throw new RuntimeException("User already inscribed in this job post");
         }
 
@@ -42,7 +42,7 @@ public class InscriptionsJobPostingService {
     }
 
     public InscriptionsJobPostingModel findByUserIdAndJobPostingId(UserModel user, JobPostingModel jobPostingModel) {
-        return inscriptionsJobPostRepository.findByUserId(user, jobPostingModel)
+        return inscriptionsJobPostRepository.findByUserIdAndJobPostingId(user, jobPostingModel)
                 .orElseThrow(() -> new RuntimeException("Inscription not found"));
     }
 

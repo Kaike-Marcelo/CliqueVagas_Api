@@ -1,6 +1,7 @@
 package com.pi.clique_vagas_api.service.jobPost.inscriptionsJobPost;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
@@ -8,6 +9,7 @@ import com.pi.clique_vagas_api.resources.dto.skill.Skill_Intermediate_WithIdDto;
 import com.pi.clique_vagas_api.service.skills.Skill_Intern_Service;
 import com.pi.clique_vagas_api.service.skills.Skill_JobPost_Service;
 
+@Service
 public class PontuationService {
 
     @Autowired
