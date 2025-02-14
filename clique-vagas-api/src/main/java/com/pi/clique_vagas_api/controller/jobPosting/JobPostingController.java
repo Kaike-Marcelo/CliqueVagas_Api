@@ -91,7 +91,16 @@ public class JobPostingController {
         return ResponseEntity.ok(posts);
     }
 
-    @GetMapping("/company/{jobPostingId}")
+    @GetMapping("/company")
+    public ResponseEntity<List<GetAllJobPostDto>> getJobPostsForCompany(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        var user = userService.findByEmail(userDetails.getUsername());
+        var company = companyService.getCompanyByUser(user);
+        List<GetAllJobPostDto> posts = jobPostingService.findAllJobPostsByIdCompanyDto(company);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/company/{jobPostingId")
     public ResponseEntity<JobPostingModel> getJobPostingById(@PathVariable Long jobPostingId,
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userService.findByEmail(userDetails.getUsername());

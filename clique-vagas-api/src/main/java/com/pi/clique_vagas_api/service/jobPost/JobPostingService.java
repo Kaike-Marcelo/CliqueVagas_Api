@@ -68,6 +68,17 @@ public class JobPostingService {
         return jobPostingRepository.findAllByCompany(company);
     }
 
+    public List<GetAllJobPostDto> findAllJobPostsByIdCompanyDto(CompanyModel company) {
+        return findAllPostsByIdCompany(company).stream()
+                .map(post -> new GetAllJobPostDto(
+                        new JobPostWithIdDto(post.getId(), post.getTitle(), post.getDescription(),
+                                post.getJobPostingStatus(), post.getAddress(), post.getApplicationDeadline()),
+                        post.getCompany().getId(), post.getCompany().getUserId().getEmail(),
+                        post.getCompany().getCompanyName(),
+                        FileUtils.loadFileFromPath(post.getCompany().getUserId().getUrlImageProfile())))
+                .collect(Collectors.toList());
+    }
+
     public List<JobPostingModel> findAllActivePosts() {
         return jobPostingRepository.findAllByJobPostingStatusNot(Status.INACTIVE);
     }
