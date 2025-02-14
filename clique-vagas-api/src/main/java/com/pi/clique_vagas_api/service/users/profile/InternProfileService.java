@@ -42,8 +42,8 @@ public class InternProfileService {
 
         PostInternDto internDto = new PostInternDto(
                 intern.getDateOfBirth(),
-                intern.getCpf(),
                 intern.getSex(),
+                intern.getCpf(),
                 intern.getEducationalInstitution(),
                 intern.getAreaOfInterest(),
                 intern.getYearOfEntry(),
