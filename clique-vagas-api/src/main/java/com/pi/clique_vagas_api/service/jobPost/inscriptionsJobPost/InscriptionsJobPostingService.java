@@ -40,9 +40,9 @@ public class InscriptionsJobPostingService {
         return inscriptionsJobPostRepository.save(inscriptionsJobPost);
     }
 
-    public void delete(Long InscriptionId, UserModel user) {
+    public void delete(JobPostingModel jobPostingModel, UserModel user) {
 
-        var inscription = findById(InscriptionId);
+        var inscription = findByUserIdAndJobPostingId(user, jobPostingModel);
 
         if (inscription.getJobPostingId().getJobPostingStatus() == Status.INACTIVE) {
             throw new RuntimeException("Error: Job post is inactive");

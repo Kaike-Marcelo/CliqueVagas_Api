@@ -13,6 +13,7 @@ import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.repository.jobPosting.JobPostingRepository;
+import com.pi.clique_vagas_api.repository.jobPosting.LikeRepository;
 import com.pi.clique_vagas_api.resources.dto.jobPost.GetAllJobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
@@ -31,6 +32,9 @@ public class JobPostingService {
 
     @Autowired
     private SkillCompatibilityService skillCompatibilityService;
+
+    @Autowired
+    private LikeRepository likeJobPostingRepository;
 
     public JobPostingModel save(JobPostDto post, CompanyModel company) {
 
@@ -121,6 +125,7 @@ public class JobPostingService {
 
     public void delete(Long idPost, CompanyModel companyModel) {
         JobPostingModel jobPosting = findByIdAndCompanyId(idPost, companyModel);
+        likeJobPostingRepository.deleteAllByJobPosting(jobPosting);
         jobPostingRepository.delete(jobPosting);
     }
 

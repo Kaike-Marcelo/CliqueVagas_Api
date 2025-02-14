@@ -74,11 +74,12 @@ public class InscriptionJobPostingController {
         return ResponseEntity.ok(inscriptionJobPostingService.checkInscription(user, post));
     }
 
-    @DeleteMapping("/{inscriptionId}")
-    public ResponseEntity<Void> deleteInscriptionJobPosting(@PathVariable Long inscriptionId,
+    @DeleteMapping("/{jobPostingId}")
+    public ResponseEntity<Void> deleteInscriptionJobPosting(@PathVariable Long jobPostingId,
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userService.findByEmail(userDetails.getUsername());
-        inscriptionJobPostingService.delete(inscriptionId, user);
+        var post = jobPostingService.findById(jobPostingId);
+        inscriptionJobPostingService.delete(post, user);
         return ResponseEntity.ok().build();
     }
 
