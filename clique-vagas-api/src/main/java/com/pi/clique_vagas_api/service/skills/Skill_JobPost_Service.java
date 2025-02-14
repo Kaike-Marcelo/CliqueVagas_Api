@@ -127,6 +127,7 @@ public class Skill_JobPost_Service {
         skillPostRepository.deleteById(id);
     }
 
+    @Transactional
     public void deleteAllByJobPosting(JobPostingModel post) {
         skillPostRepository.deleteAllByIdJobPosting(post);
     }

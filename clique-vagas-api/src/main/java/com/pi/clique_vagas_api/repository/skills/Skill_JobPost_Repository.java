@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
@@ -19,5 +22,8 @@ public interface Skill_JobPost_Repository extends JpaRepository<Skill_JobPosting
 
     Optional<Skill_JobPosting_Model> findByIdAndIdJobPosting(Long id, JobPostingModel model);
 
-    Boolean deleteAllByIdJobPosting(JobPostingModel model);
+    @Modifying
+    @Query("DELETE FROM Skill_JobPosting_Model s WHERE s.idJobPosting = :jobPosting")
+    void deleteAllByIdJobPosting(@Param("jobPosting") JobPostingModel jobPosting);
+
 }
