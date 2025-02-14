@@ -51,6 +51,10 @@ public class InscriptionsJobPostingService {
         inscriptionsJobPostRepository.delete(inscription);
     }
 
+    public Boolean checkInscription(UserModel user, JobPostingModel jobPosting) {
+        return inscriptionsJobPostRepository.findByUserIdAndJobPostingId(user, jobPosting).isPresent();
+    }
+
     public InscriptionsJobPostingModel findById(Long id) {
         return inscriptionsJobPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Inscription not found"));

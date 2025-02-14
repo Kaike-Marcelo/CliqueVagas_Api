@@ -56,7 +56,7 @@ public class InscriptionJobPostingController {
         return ResponseEntity.ok(inscription.getId());
     }
 
-    @GetMapping("/inscriptions/{jobPostingId}")
+    @GetMapping("company/{jobPostingId}")
     public ResponseEntity<List<GetInscriptionJobPostWithIdDto>> getInscriptionsJobPosting(
             @PathVariable Long jobPostingId, @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -64,6 +64,14 @@ public class InscriptionJobPostingController {
         var company = companyService.getCompanyByUser(user);
         var post = jobPostingService.findByIdAndCompanyId(jobPostingId, company);
         return ResponseEntity.ok(inscriptionJobPostingService.findAllByJobPosting(post));
+    }
+
+    @GetMapping("intern/{jobPostingId}")
+    public ResponseEntity<Boolean> chckInscriptionInternInJobPosting(@PathVariable Long jobPostingId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        var user = userService.findByEmail(userDetails.getUsername());
+        var post = jobPostingService.findById(jobPostingId);
+        return ResponseEntity.ok(inscriptionJobPostingService.checkInscription(user, post));
     }
 
     @DeleteMapping("/{inscriptionId}")
