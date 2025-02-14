@@ -19,6 +19,7 @@ import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
+import com.pi.clique_vagas_api.resources.dto.jobPost.GetAllJobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.GetJobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
@@ -74,19 +75,19 @@ public class JobPostingController {
     }
 
     @GetMapping("/public")
-    public ResponseEntity<List<JobPostingModel>> getPublicJobPosts() {
-        List<JobPostingModel> posts = jobPostingService.findAllActivePosts();
+    public ResponseEntity<List<GetAllJobPostDto>> getPublicJobPosts() {
+        List<GetAllJobPostDto> posts = jobPostingService.findAllActivePostsDto();
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/public/intern")
-    public ResponseEntity<List<JobPostingModel>> getJobPostsForIntern(
+    public ResponseEntity<List<GetAllJobPostDto>> getJobPostsForIntern(
             @AuthenticationPrincipal UserDetails userDetails) {
 
         UserModel user = userService.findByEmail(userDetails.getUsername());
         InternModel intern = internService.getInternByUser(user);
         List<Skill_Intern_Model> internSkills = skill_Intern_Service.getSkillsFromInternByUserId(intern);
-        List<JobPostingModel> posts = jobPostingService.getJobPostsForIntern(internSkills);
+        List<GetAllJobPostDto> posts = jobPostingService.getJobPostsForInternDto(internSkills);
         return ResponseEntity.ok(posts);
     }
 

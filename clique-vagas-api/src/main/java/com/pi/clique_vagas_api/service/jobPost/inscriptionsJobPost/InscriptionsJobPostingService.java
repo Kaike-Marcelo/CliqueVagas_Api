@@ -11,6 +11,7 @@ import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.jobPosting.InscriptionsJobPostingRepository;
 import com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost.GetInscriptionJobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.dto.user.GetNameAndEmailUserDto;
+import com.pi.clique_vagas_api.resources.enums.Status;
 import com.pi.clique_vagas_api.utils.DateUtils;
 import com.pi.clique_vagas_api.utils.FileUtils;
 
@@ -26,6 +27,10 @@ public class InscriptionsJobPostingService {
             throw new RuntimeException("User already inscribed in this job post");
         }
 
+        if (jobPostingModel.getJobPostingStatus() == Status.INACTIVE) {
+            throw new RuntimeException("Error: Job post is inactive");
+        }
+
         InscriptionsJobPostingModel inscriptionsJobPost = new InscriptionsJobPostingModel();
         inscriptionsJobPost.setJobPostingId(jobPostingModel);
         inscriptionsJobPost.setUserId(userModel);
@@ -36,9 +41,19 @@ public class InscriptionsJobPostingService {
     }
 
     public void delete(Long InscriptionId, UserModel user) {
-        if (!inscriptionsJobPostRepository.deleteByUserIdAndId(user, InscriptionId)) {
-            throw new RuntimeException("Inscription not found");
+
+        var inscription = findById(InscriptionId);
+
+        if (inscription.getJobPostingId().getJobPostingStatus() == Status.INACTIVE) {
+            throw new RuntimeException("Error: Job post is inactive");
         }
+
+        inscriptionsJobPostRepository.delete(inscription);
+    }
+
+    public InscriptionsJobPostingModel findById(Long id) {
+        return inscriptionsJobPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Inscription not found"));
     }
 
     public InscriptionsJobPostingModel findByUserIdAndJobPostingId(UserModel user, JobPostingModel jobPostingModel) {

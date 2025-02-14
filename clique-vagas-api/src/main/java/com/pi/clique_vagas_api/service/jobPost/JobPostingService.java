@@ -1,21 +1,28 @@
 package com.pi.clique_vagas_api.service.jobPost;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.skills.Skill_Intern_Model;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.repository.jobPosting.JobPostingRepository;
+import com.pi.clique_vagas_api.resources.dto.jobPost.GetAllJobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.enums.Status;
 import com.pi.clique_vagas_api.service.skills.SkillCompatibilityService;
 import com.pi.clique_vagas_api.utils.DateUtils;
+import com.pi.clique_vagas_api.utils.FileUtils;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class JobPostingService {
@@ -62,12 +69,34 @@ public class JobPostingService {
         return jobPostingRepository.findAllByJobPostingStatusNot(Status.INACTIVE);
     }
 
+    public List<GetAllJobPostDto> findAllActivePostsDto() {
+        return findAllActivePosts().stream()
+                .map(post -> new GetAllJobPostDto(
+                        new JobPostWithIdDto(post.getId(), post.getTitle(), post.getDescription(),
+                                post.getJobPostingStatus(), post.getAddress(), post.getApplicationDeadline()),
+                        post.getCompany().getId(), post.getCompany().getUserId().getEmail(),
+                        post.getCompany().getCompanyName(),
+                        FileUtils.loadFileFromPath(post.getCompany().getUserId().getUrlImageProfile())))
+                .collect(Collectors.toList());
+    }
+
     public List<JobPostingModel> getJobPostsForIntern(List<Skill_Intern_Model> internSkills) {
         List<JobPostingModel> activePosts = findAllActivePosts();
 
         return activePosts.stream()
                 .sorted(Comparator.comparingInt(
                         post -> -skillCompatibilityService.calculateCompatibilityScore(internSkills, post)))
+                .collect(Collectors.toList());
+    }
+
+    public List<GetAllJobPostDto> getJobPostsForInternDto(List<Skill_Intern_Model> internSkills) {
+        return getJobPostsForIntern(internSkills).stream()
+                .map(post -> new GetAllJobPostDto(
+                        new JobPostWithIdDto(post.getId(), post.getTitle(), post.getDescription(),
+                                post.getJobPostingStatus(), post.getAddress(), post.getApplicationDeadline()),
+                        post.getCompany().getId(), post.getCompany().getUserId().getEmail(),
+                        post.getCompany().getCompanyName(),
+                        FileUtils.loadFileFromPath(post.getCompany().getUserId().getUrlImageProfile())))
                 .collect(Collectors.toList());
     }
 
@@ -93,5 +122,28 @@ public class JobPostingService {
     public void delete(Long idPost, CompanyModel companyModel) {
         JobPostingModel jobPosting = findByIdAndCompanyId(idPost, companyModel);
         jobPostingRepository.delete(jobPosting);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void updateExpiredJobPostings() {
+
+        ZonedDateTime now = DateUtils.nowInZone();
+        List<JobPostingModel> activePosts = jobPostingRepository
+                .findAllByJobPostingStatusNot(Status.INACTIVE);
+
+        activePosts.stream()
+                .filter(post -> post.getApplicationDeadline().isBefore(now))
+                .forEach(post -> {
+                    post.setJobPostingStatus(Status.INACTIVE);
+                    post.setUpdateAt(now);
+                    jobPostingRepository.save(post);
+                });
+    }
+
+    public long calculateDaysRemaining(ZonedDateTime applicationDeadline) {
+        ZonedDateTime now = DateUtils.nowInZone();
+        Duration duration = Duration.between(now, applicationDeadline);
+        return duration.toDays() > 0 ? duration.toDays() : 0;
     }
 }
