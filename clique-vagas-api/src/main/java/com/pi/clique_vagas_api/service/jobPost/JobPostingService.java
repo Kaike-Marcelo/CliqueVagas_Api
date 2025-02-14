@@ -19,6 +19,7 @@ import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostDto;
 import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.enums.Status;
 import com.pi.clique_vagas_api.service.skills.SkillCompatibilityService;
+import com.pi.clique_vagas_api.service.skills.Skill_JobPost_Service;
 import com.pi.clique_vagas_api.utils.DateUtils;
 import com.pi.clique_vagas_api.utils.FileUtils;
 
@@ -32,6 +33,9 @@ public class JobPostingService {
 
     @Autowired
     private SkillCompatibilityService skillCompatibilityService;
+
+    @Autowired
+    private Skill_JobPost_Service skillJobPostService;
 
     @Autowired
     private LikeRepository likeJobPostingRepository;
@@ -137,6 +141,7 @@ public class JobPostingService {
     public void delete(Long idPost, CompanyModel companyModel) {
         JobPostingModel jobPosting = findByIdAndCompanyId(idPost, companyModel);
         likeJobPostingRepository.deleteAllByJobPosting(jobPosting);
+        skillJobPostService.deleteAllByJobPosting(jobPosting);
         jobPostingRepository.delete(jobPosting);
     }
 

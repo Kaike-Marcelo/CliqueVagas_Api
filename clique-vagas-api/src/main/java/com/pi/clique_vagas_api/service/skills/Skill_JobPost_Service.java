@@ -127,4 +127,8 @@ public class Skill_JobPost_Service {
         skillPostRepository.deleteById(id);
     }
 
+    public void deleteAllByJobPosting(JobPostingModel post) {
+        skillPostRepository.deleteAllByIdJobPosting(post);
+    }
+
 }

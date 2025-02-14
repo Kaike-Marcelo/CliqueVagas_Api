@@ -19,4 +19,5 @@ public interface Skill_JobPost_Repository extends JpaRepository<Skill_JobPosting
 
     Optional<Skill_JobPosting_Model> findByIdAndIdJobPosting(Long id, JobPostingModel model);
 
+    Boolean deleteAllByIdJobPosting(JobPostingModel model);
 }
