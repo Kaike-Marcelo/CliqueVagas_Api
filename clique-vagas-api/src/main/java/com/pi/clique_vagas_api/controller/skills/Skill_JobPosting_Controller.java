@@ -73,16 +73,25 @@ public class Skill_JobPosting_Controller {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<Skill_Intermediate_WithIdDto>> getAllSkillsPostByIdCompany(
-            @AuthenticationPrincipal UserDetails userDetails) {
+    // @GetMapping
+    // public ResponseEntity<List<Skill_Intermediate_WithIdDto>>
+    // getAllSkillsPostByIdCompany(
+    // @AuthenticationPrincipal UserDetails userDetails) {
 
-        var user = (UserModel) userService.findByEmail(userDetails.getUsername());
-        var company = companyService.getCompanyByUser(user);
-        var JobPost = jobPostService.findByCompanyId(company);
+    // var user = (UserModel) userService.findByEmail(userDetails.getUsername());
+    // var company = companyService.getCompanyByUser(user);
+    // var JobPost = jobPostService.findByCompanyId(company);
 
-        var skillsJobPost = skillJobPostService.getSkillsDtoByPostId(JobPost);
-        return ResponseEntity.ok(skillsJobPost);
+    // var skillsJobPost = skillJobPostService.getSkillsDtoByPostId(JobPost);
+    // return ResponseEntity.ok(skillsJobPost);
+    // }
+
+    @GetMapping("/{jobPostingId}")
+    public ResponseEntity<List<Skill_Intermediate_WithIdDto>> getSkillsByJobPostId(
+            @PathVariable Long jobPostingId) {
+        var jobPost = jobPostService.findById(jobPostingId);
+        var skills = skillJobPostService.getSkillsDtoByPostId(jobPost);
+        return ResponseEntity.ok(skills);
     }
 
     @DeleteMapping("/{id}")

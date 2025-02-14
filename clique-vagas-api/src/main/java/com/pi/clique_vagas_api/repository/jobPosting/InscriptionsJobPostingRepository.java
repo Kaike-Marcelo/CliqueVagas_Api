@@ -27,6 +27,8 @@ public interface InscriptionsJobPostingRepository extends JpaRepository<Inscript
 
     List<InscriptionsJobPostingModel> findAllByUserIdAndJobPostingId(UserModel userId, JobPostingModel jobPostingModel);
 
+    List<InscriptionsJobPostingModel> findAllByUserId(UserModel userId);
+
     Boolean deleteByUserIdAndId(UserModel userId, Long id);
 
 }

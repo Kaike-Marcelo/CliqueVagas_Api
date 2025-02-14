@@ -10,6 +10,7 @@ import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.repository.jobPosting.InscriptionsJobPostingRepository;
 import com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost.GetInscriptionJobPostWithIdDto;
+import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.resources.dto.user.GetNameAndEmailUserDto;
 import com.pi.clique_vagas_api.resources.enums.Status;
 import com.pi.clique_vagas_api.utils.DateUtils;
@@ -77,6 +78,19 @@ public class InscriptionsJobPostingService {
                                 FileUtils.loadFileFromPath(inscription.getUserId().getUrlImageProfile())),
                         inscription.getPontuation(),
                         inscription.getInscriptionDate()))
+                .toList();
+    }
+
+    public List<JobPostWithIdDto> findAllByUserId(UserModel user) {
+        var inscriptions = inscriptionsJobPostRepository.findAllByUserId(user);
+        return inscriptions.stream()
+                .map(inscription -> new JobPostWithIdDto(
+                        inscription.getJobPostingId().getId(),
+                        inscription.getJobPostingId().getTitle(),
+                        inscription.getJobPostingId().getDescription(),
+                        inscription.getJobPostingId().getJobPostingStatus(),
+                        inscription.getJobPostingId().getAddress(),
+                        inscription.getJobPostingId().getApplicationDeadline()))
                 .toList();
     }
 

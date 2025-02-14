@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pi.clique_vagas_api.resources.dto.inscriptionsJobPost.GetInscriptionJobPostWithIdDto;
+import com.pi.clique_vagas_api.resources.dto.jobPost.JobPostWithIdDto;
 import com.pi.clique_vagas_api.service.jobPost.JobPostingService;
 import com.pi.clique_vagas_api.service.jobPost.inscriptionsJobPost.InscriptionsJobPostingService;
 import com.pi.clique_vagas_api.service.jobPost.inscriptionsJobPost.PontuationService;
@@ -66,12 +67,19 @@ public class InscriptionJobPostingController {
         return ResponseEntity.ok(inscriptionJobPostingService.findAllByJobPosting(post));
     }
 
-    @GetMapping("intern/{jobPostingId}")
+    @GetMapping("intern/check/{jobPostingId}")
     public ResponseEntity<Boolean> chckInscriptionInternInJobPosting(@PathVariable Long jobPostingId,
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userService.findByEmail(userDetails.getUsername());
         var post = jobPostingService.findById(jobPostingId);
         return ResponseEntity.ok(inscriptionJobPostingService.checkInscription(user, post));
+    }
+
+    @GetMapping("/intern")
+    public ResponseEntity<List<JobPostWithIdDto>> getInscriptionsIntern(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        var user = userService.findByEmail(userDetails.getUsername());
+        return ResponseEntity.ok(inscriptionJobPostingService.findAllByUserId(user));
     }
 
     @DeleteMapping("/{jobPostingId}")
