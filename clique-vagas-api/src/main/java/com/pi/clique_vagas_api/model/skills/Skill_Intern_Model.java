@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.pi.clique_vagas_api.model.users.typeUsers.InternModel;
 import com.pi.clique_vagas_api.resources.enums.skill.ProficiencyLevel;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,11 +36,11 @@ public class Skill_Intern_Model {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_intern")
     private InternModel idIntern;
 
-    @ManyToOne
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_skill")
     private SkillModel idSkill;
 

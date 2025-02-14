@@ -1,6 +1,5 @@
 package com.pi.clique_vagas_api.service.jobPost;
 
-import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -108,11 +107,12 @@ public class JobPostingService {
             jobPosting.setTitle(post.title());
         if (post.description() != null)
             jobPosting.setDescription(post.description());
-        if (post.jobPostingStatus() != null)
+        if (post.jobPostingStatus() != null && jobPosting.getApplicationDeadline().isBefore(DateUtils.nowInZone()))
             jobPosting.setJobPostingStatus(post.jobPostingStatus());
         if (post.address() != null)
             jobPosting.setAddress(post.address());
-        jobPosting.setApplicationDeadline(post.applicationDeadline());
+        if (post.applicationDeadline() != null)
+            jobPosting.setApplicationDeadline(post.applicationDeadline());
 
         jobPosting.setUpdateAt(DateUtils.nowInZone());
 
@@ -139,11 +139,5 @@ public class JobPostingService {
                     post.setUpdateAt(now);
                     jobPostingRepository.save(post);
                 });
-    }
-
-    public long calculateDaysRemaining(ZonedDateTime applicationDeadline) {
-        ZonedDateTime now = DateUtils.nowInZone();
-        Duration duration = Duration.between(now, applicationDeadline);
-        return duration.toDays() > 0 ? duration.toDays() : 0;
     }
 }
