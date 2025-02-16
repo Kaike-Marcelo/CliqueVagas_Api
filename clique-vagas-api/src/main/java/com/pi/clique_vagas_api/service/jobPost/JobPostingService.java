@@ -54,6 +54,11 @@ public class JobPostingService {
         return jobPostingRepository.save(jobPosting);
     }
 
+    public List<GetAllJobPostDto> searchJobPosts(String searchTerm) {
+        List<JobPostingModel> posts = jobPostingRepository.searchActivePosts(searchTerm);
+        return getObjsPostsDto(posts);
+    }
+
     public JobPostingModel findById(Long id) {
         return jobPostingRepository.findById(id).orElse(null);
     }
@@ -73,14 +78,8 @@ public class JobPostingService {
     }
 
     public List<GetAllJobPostDto> findAllJobPostsByIdCompanyDto(CompanyModel company) {
-        return findAllPostsByIdCompany(company).stream()
-                .map(post -> new GetAllJobPostDto(
-                        new JobPostWithIdDto(post.getId(), post.getTitle(), post.getDescription(),
-                                post.getJobPostingStatus(), post.getAddress(), post.getApplicationDeadline()),
-                        post.getCompany().getId(), post.getCompany().getUserId().getEmail(),
-                        post.getCompany().getCompanyName(),
-                        FileUtils.loadFileFromPath(post.getCompany().getUserId().getUrlImageProfile())))
-                .collect(Collectors.toList());
+        var posts = findAllPostsByIdCompany(company);
+        return getObjsPostsDto(posts);
     }
 
     public List<JobPostingModel> findAllActivePosts() {
@@ -88,14 +87,8 @@ public class JobPostingService {
     }
 
     public List<GetAllJobPostDto> findAllActivePostsDto() {
-        return findAllActivePosts().stream()
-                .map(post -> new GetAllJobPostDto(
-                        new JobPostWithIdDto(post.getId(), post.getTitle(), post.getDescription(),
-                                post.getJobPostingStatus(), post.getAddress(), post.getApplicationDeadline()),
-                        post.getCompany().getId(), post.getCompany().getUserId().getEmail(),
-                        post.getCompany().getCompanyName(),
-                        FileUtils.loadFileFromPath(post.getCompany().getUserId().getUrlImageProfile())))
-                .collect(Collectors.toList());
+        var posts = findAllActivePosts();
+        return getObjsPostsDto(posts);
     }
 
     public List<JobPostingModel> getJobPostsForIntern(List<Skill_Intern_Model> internSkills) {
@@ -110,9 +103,32 @@ public class JobPostingService {
     public List<GetAllJobPostDto> getJobPostsForInternDto(List<Skill_Intern_Model> internSkills) {
         return getJobPostsForIntern(internSkills).stream()
                 .map(post -> new GetAllJobPostDto(
-                        new JobPostWithIdDto(post.getId(), post.getTitle(), post.getDescription(),
-                                post.getJobPostingStatus(), post.getAddress(), post.getApplicationDeadline()),
-                        post.getCompany().getId(), post.getCompany().getUserId().getEmail(),
+                        new JobPostWithIdDto(
+                                post.getId(),
+                                post.getTitle(),
+                                post.getDescription(),
+                                post.getJobPostingStatus(),
+                                post.getAddress(),
+                                post.getApplicationDeadline()),
+                        post.getCompany().getId(),
+                        post.getCompany().getUserId().getEmail(),
+                        post.getCompany().getCompanyName(),
+                        FileUtils.loadFileFromPath(post.getCompany().getUserId().getUrlImageProfile())))
+                .collect(Collectors.toList());
+    }
+
+    public List<GetAllJobPostDto> getObjsPostsDto(List<JobPostingModel> jobPosting) {
+        return jobPosting.stream()
+                .map(post -> new GetAllJobPostDto(
+                        new JobPostWithIdDto(
+                                post.getId(),
+                                post.getTitle(),
+                                post.getDescription(),
+                                post.getJobPostingStatus(),
+                                post.getAddress(),
+                                post.getApplicationDeadline()),
+                        post.getCompany().getId(),
+                        post.getCompany().getUserId().getEmail(),
                         post.getCompany().getCompanyName(),
                         FileUtils.loadFileFromPath(post.getCompany().getUserId().getUrlImageProfile())))
                 .collect(Collectors.toList());

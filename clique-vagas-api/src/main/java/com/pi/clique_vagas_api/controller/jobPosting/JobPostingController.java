@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pi.clique_vagas_api.model.jobPost.JobPostingModel;
@@ -117,6 +118,14 @@ public class JobPostingController {
         var completePosts = skill_JobPost_Service.findAllCompletePostsByIdPost(posts);
 
         return ResponseEntity.ok(completePosts);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<GetAllJobPostDto>> searchJobPosts(
+            @RequestParam(name = "q", required = false) String searchTerm) {
+
+        List<GetAllJobPostDto> results = jobPostingService.searchJobPosts(searchTerm != null ? searchTerm : "");
+        return ResponseEntity.ok(results);
     }
 
     @DeleteMapping("/{id}")
