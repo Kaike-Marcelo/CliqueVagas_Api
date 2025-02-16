@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pi.clique_vagas_api.model.users.UserModel;
 import com.pi.clique_vagas_api.model.users.typeUsers.CompanyModel;
 import com.pi.clique_vagas_api.resources.dto.user.company.PostCompanyDto;
+import com.pi.clique_vagas_api.resources.dto.user.UserDto;
 import com.pi.clique_vagas_api.resources.dto.user.company.CompanyProfileDto;
 import com.pi.clique_vagas_api.service.AddressService;
 import com.pi.clique_vagas_api.service.users.typeUsers.CompanyService;
@@ -21,7 +22,7 @@ public class CompanyProfileService {
     private AddressService addressService;
 
     @Transactional
-    public CompanyProfileDto getDataByIdUser(UserModel user) {
+    public CompanyProfileDto getDataByIdUser(UserModel user, UserDto userDto) {
 
         var company = companyService.getCompanyByUser(user);
         var address = addressService.getAddressDtoByUserId(user);
@@ -29,7 +30,7 @@ public class CompanyProfileService {
         var companyDto = getObjCompanyDto(company);
 
         CompanyProfileDto companyProfile = new CompanyProfileDto();
-        companyProfile.setUser(user);
+        companyProfile.setUser(userDto);
         companyProfile.setAddress(address);
         companyProfile.setCompany(companyDto);
 
