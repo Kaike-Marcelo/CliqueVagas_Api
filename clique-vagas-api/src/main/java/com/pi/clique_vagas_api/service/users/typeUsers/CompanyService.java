@@ -79,8 +79,8 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyModel updateCompany(Long id, PostCompanyDto company) {
-        var companyModel = getCompanyById(id);
+    public CompanyModel updateCompany(CompanyModel companyModel, PostCompanyDto company) {
+        // var companyModel = getCompanyById(id);
 
         companyModel.setCompanyName(company.companyName());
         companyModel.setCnpj(company.cnpj());
