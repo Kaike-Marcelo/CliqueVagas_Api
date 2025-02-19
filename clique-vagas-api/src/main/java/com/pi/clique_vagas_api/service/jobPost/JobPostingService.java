@@ -42,6 +42,8 @@ public class JobPostingService {
 
     public JobPostingModel save(JobPostDto post, CompanyModel company) {
 
+        System.out.println("agora! ENDEREÇO: " + post.address());
+
         JobPostingModel jobPosting = new JobPostingModel();
         jobPosting.setCompany(company);
         jobPosting.setTitle(post.title());

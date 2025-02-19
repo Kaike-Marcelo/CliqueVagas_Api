@@ -1,6 +1,5 @@
 package com.pi.clique_vagas_api.controller.skills;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +55,7 @@ public class Skill_JobPosting_Controller {
         var skillJobPostId = skillJobPostService.createSkillPost(skill, jobPost,
                 body);
 
-        return ResponseEntity.created(URI.create("/skill/" +
-                skillJobPostId.getId())).build();
+        return ResponseEntity.ok(skillJobPostId.getId());
     }
 
     @PutMapping

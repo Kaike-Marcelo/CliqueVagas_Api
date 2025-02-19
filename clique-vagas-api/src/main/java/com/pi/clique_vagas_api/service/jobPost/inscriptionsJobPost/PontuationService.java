@@ -20,24 +20,28 @@ public class PontuationService {
 
     public Double calculatePontuation(InternModel intern, JobPostingModel jobPost) {
 
-        var skillInterns = skill_Intern_Service.getSkillsDtoByInternId(intern);
         var skillJobPosts = skill_JobPost_Service.getSkillsDtoByPostId(jobPost);
+        if (skillJobPosts.isEmpty()) {
+            return 0.0;
+        }
+        var skillInterns = skill_Intern_Service.getSkillsDtoByInternId(intern).iterator();
 
         Double totalCompatibilityScore = 0.0;
-        int matchingSkillsCount = 0;
 
-        for (Skill_Intermediate_WithIdDto skillPost : skillJobPosts) {
-            for (Skill_Intermediate_WithIdDto skillIntern : skillInterns) {
+        while (skillInterns.hasNext()) {
+            Skill_Intermediate_WithIdDto skillIntern = skillInterns.next();
+            for (Skill_Intermediate_WithIdDto skillPost : skillJobPosts) {
                 if (skillPost.idSkill().equals(skillIntern.idSkill())) {
                     totalCompatibilityScore += skillPost.proficiencyLevel()
                             .calculateSkillCompatibility(skillIntern.proficiencyLevel());
-                    matchingSkillsCount++;
+                    skillInterns.remove();
+                    break;
                 }
             }
         }
 
-        double normalizedScore = matchingSkillsCount > 0 ? (totalCompatibilityScore / matchingSkillsCount) * 100 : 0.0;
-        return normalizedScore > 100 ? 100 : (normalizedScore < 0 ? 0 : normalizedScore);
+        double normalizedScore = (totalCompatibilityScore / skillJobPosts.size()) * 100;
+        return Math.min(100, Math.max(0, normalizedScore));
     }
 
 }

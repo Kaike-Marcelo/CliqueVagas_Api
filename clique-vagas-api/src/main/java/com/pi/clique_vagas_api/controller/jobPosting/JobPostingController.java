@@ -57,10 +57,18 @@ public class JobPostingController {
     public ResponseEntity<Long> saveJobPosting(@AuthenticationPrincipal UserDetails userDetails,
             @RequestBody JobPostDto postDto) {
 
+        // Log para verificar o valor de address recebido do frontend
+        System.out.println("ENDEREÇO NO CONTROLLER (antes de salvar): " + postDto.address());
+
+        // Verificação adicional para garantir que o address não seja nulo ou vazio
+        if (postDto.address() == null || postDto.address().isEmpty()) {
+            throw new IllegalArgumentException("Address cannot be null or empty");
+        }
+
         var user = userService.findByEmail(userDetails.getUsername());
         var company = companyService.getCompanyByUser(user);
         var post = jobPostingService.save(postDto, company);
-
+        System.out.println("ENDEREÇO NO CONTROLLER (após salvar): " + post.getAddress());
         return ResponseEntity.ok(post.getId());
     }
 

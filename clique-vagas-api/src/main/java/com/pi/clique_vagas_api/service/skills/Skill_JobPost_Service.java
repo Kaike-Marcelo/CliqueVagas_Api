@@ -51,7 +51,8 @@ public class Skill_JobPost_Service {
                 null);
 
         eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, post.getId()));
-        return skillPostRepository.save(skillPostModel);
+        var saved = skillPostRepository.save(skillPostModel);
+        return saved;
     }
 
     public Skill_JobPosting_Model getSkillPostById(Long id) {
@@ -116,15 +117,16 @@ public class Skill_JobPost_Service {
 
         skillPost.setProficiencyLevel(body.proficiencyLevel());
         skillPost.setUpdatedAt(DateUtils.nowInZone());
-        eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, post.getId()));
 
-        return skillPostRepository.save(skillPost);
+        var update = skillPostRepository.save(skillPost);
+        eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, post.getId()));
+        return update;
     }
 
     public void deleteSkillPost(Long id) {
         var skillPost = getSkillPostById(id);
-        eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, skillPost.getId()));
         skillPostRepository.deleteById(id);
+        eventPublisher.publishEvent(new JobPostingSkillChangedEvent(this, skillPost.getId()));
     }
 
     @Transactional
